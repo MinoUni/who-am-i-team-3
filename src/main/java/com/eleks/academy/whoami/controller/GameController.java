@@ -41,11 +41,13 @@ public class GameController {
 	}
 	
 	@PostMapping
-//	@ResponseStatus(HttpStatus.CREATED)
-	public GameDetails createGame(@RequestHeader(PLAYER) String player,
+	@ResponseStatus(HttpStatus.CREATED)
+	public ResponseEntity<GameDetails> createGame(@RequestHeader(PLAYER) String player,
 								  @Valid @RequestBody NewGameRequest gameRequest) {
 		
-		return this.gameService.createGame(player, gameRequest);
+		return this.gameService.createGame(player, gameRequest)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	@GetMapping("/{id}")

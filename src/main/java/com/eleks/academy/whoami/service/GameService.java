@@ -19,7 +19,7 @@ public interface GameService {
 
 	List<GameLight> findAvailableGames(String player);
 
-	GameDetails createGame(String player, NewGameRequest gameRequest);
+	Optional<GameDetails> createGame(String player, NewGameRequest gameRequest);
 
 	SynchronousPlayer enrollToGame(String id, String player);
 
