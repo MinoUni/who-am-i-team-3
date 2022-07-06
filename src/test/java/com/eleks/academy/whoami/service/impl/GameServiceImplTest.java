@@ -65,10 +65,10 @@ class GameServiceImplTest {
 
 		when(mockGameRepository.save(any(SynchronousGame.class))).thenReturn(game);
 
-		GameDetails createdGame = gameService.createGame(player, gameRequest);
+		Optional<GameDetails> createdGame = gameService.createGame(player, gameRequest);
 
 		assertThat(createdGame).isNotNull();
-		assertThat(createdGame.getId()).isEqualTo(game.getId());
+		assertThat(createdGame.get().getId()).isEqualTo(game.getId());
 
 		verify(mockGameRepository, times(1)).save(any(SynchronousGame.class));
 	}

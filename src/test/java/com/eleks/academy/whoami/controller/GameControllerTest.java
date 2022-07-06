@@ -61,7 +61,7 @@ class GameControllerTest {
 		GameDetails gameDetails = new GameDetails();
 		gameDetails.setId("12613126");
 		gameDetails.setStatus("WaitingForPlayers");
-		when(gameService.createGame(eq("player"), any(NewGameRequest.class))).thenReturn(gameDetails);
+		when(gameService.createGame(eq("player"), any(NewGameRequest.class))).thenReturn(Optional.of(gameDetails));
 		this.mockMvc.perform(
 						MockMvcRequestBuilders.post("/games")
 								.header("X-Player", "player")
