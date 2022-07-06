@@ -161,4 +161,9 @@ public class GameServiceImpl implements GameService {
 		return this.gameRepository.findAllGames(player).map(AllFields::of).toList();
 	}
 
+	@Override
+	public Integer getAllPlayersCount() {
+		return Math.toIntExact(this.gameRepository.getAllPlayers().count());
+	}
+
 }

@@ -128,4 +128,9 @@ public class GameController {
 				.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+
+	@GetMapping("/all-players-count")
+	public Integer getAllPlayersCount(@RequestHeader(PLAYER) String player) {
+		return this.gameService.getAllPlayersCount();
+	}
 }
