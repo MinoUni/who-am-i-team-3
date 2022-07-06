@@ -41,7 +41,7 @@ public class GameController {
 	}
 	
 	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
+//	@ResponseStatus(HttpStatus.CREATED)
 	public GameDetails createGame(@RequestHeader(PLAYER) String player,
 								  @Valid @RequestBody NewGameRequest gameRequest) {
 		

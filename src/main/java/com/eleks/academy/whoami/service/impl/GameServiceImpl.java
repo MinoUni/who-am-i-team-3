@@ -43,9 +43,22 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public GameDetails createGame(String player, NewGameRequest gameRequest) {
-		final var game = this.gameRepository.save(new PersistentGame(player, gameRequest.getMaxPlayers()));
+//		final var game = this.gameRepository.save(new PersistentGame(player, gameRequest.getMaxPlayers()));
 
-		return GameDetails.of(game);
+		Map<String, SynchronousGame> games = gameRepository.findAvailableQuickGames();
+
+		if (games.isEmpty()) {
+
+			final SynchronousGame game = gameRepository.save(new PersistentGame(4));
+			enrollToGame(game.getId(), player);
+
+			return GameDetails.of(gameRepository.findById(game.getId()).get());
+		}
+
+		var FirstGame = games.keySet().stream().findFirst().get();
+		enrollToGame(games.get(FirstGame).getId(), player);
+
+		return GameDetails.of(gameRepository.findById(games.get(FirstGame).getId()).get());
 	}
 
 	//TODO: implement validations for create custom game
