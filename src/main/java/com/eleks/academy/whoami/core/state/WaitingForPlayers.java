@@ -49,11 +49,6 @@ public final class WaitingForPlayers implements GameState {
 		return this.getClass().getName();
 	}
 
-	public static void main(String[] args) {
-		WaitingForPlayers w = new WaitingForPlayers(4);
-		System.out.println(w.getStatus());
-	}
-
 	@Override
 	public Optional<SynchronousPlayer> findPlayer(String player) {
 		return Optional.ofNullable(this.players.get(player));

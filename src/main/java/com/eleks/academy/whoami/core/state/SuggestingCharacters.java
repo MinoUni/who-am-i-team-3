@@ -60,7 +60,7 @@ public final class SuggestingCharacters implements GameState {
 
 	@Override
 	public String getStatus() {
-		return null;
+		return this.getClass().getName();
 	}
 
 	@Override

@@ -55,7 +55,7 @@ public final class ProcessingQuestion implements GameState {
 
 	@Override
 	public String getStatus() {
-		return null;
+		return this.getClass().getName();
 	}
 
 	@Override
