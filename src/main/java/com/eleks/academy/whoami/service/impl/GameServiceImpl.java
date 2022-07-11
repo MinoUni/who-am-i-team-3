@@ -72,7 +72,7 @@ public class GameServiceImpl implements GameService {
 	public Optional<PlayerSuggestion> suggestCharacter(String id, String player, CharacterSuggestion suggestion) {
 
 		this.gameRepository.findById(id)
-				.filter(g -> g.isAvailable() == false && g.getState() instanceof SuggestingCharacters)
+				.filter(g -> !g.isAvailable() && g.getState() instanceof SuggestingCharacters)
 				.map(game -> game.findPlayer(player))
 				.ifPresentOrElse(p -> p.ifPresentOrElse(then -> then.suggest(suggestion), 
 											() -> {
