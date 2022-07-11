@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import com.eleks.academy.whoami.core.SynchronousPlayer;
 
-public sealed interface GameState permits AbstractGameState {
+public interface GameState {
 
 	/**
 	 * Used for presentation purposes only

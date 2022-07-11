@@ -24,7 +24,7 @@ import com.eleks.academy.whoami.core.SynchronousPlayer;
 import com.eleks.academy.whoami.core.exception.GameException;
 import com.eleks.academy.whoami.core.impl.GameCharacter;
 
-public final class SuggestingCharacters extends AbstractGameState {
+public final class SuggestingCharacters implements GameState {
 
 	private final Map<String, SynchronousPlayer> players;
 	
@@ -33,8 +33,6 @@ public final class SuggestingCharacters extends AbstractGameState {
 	private final Map<String, String> playerCharacterMap;
 
 	public SuggestingCharacters(Map<String, SynchronousPlayer> players) {
-		super(players.size(), players.size());
-
 		this.players = players;
 		this.suggestedCharacters = new HashMap<>(this.players.size());		
 		this.playerCharacterMap = new ConcurrentHashMap<>(this.players.size());
@@ -59,12 +57,22 @@ public final class SuggestingCharacters extends AbstractGameState {
 	public GameState getCurrentState() {
 		return this;
 	}
-	
+
+	@Override
+	public String getStatus() {
+		return null;
+	}
+
 	@Override
 	public Stream<SynchronousPlayer> getPlayersList() {
 		return this.players.values().stream();
 	}
-	
+
+	@Override
+	public int getPlayersInGame() {
+		return 0;
+	}
+
 	@Override
 	public boolean isReadyToNextState() {
 		if (this.players

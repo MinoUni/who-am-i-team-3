@@ -5,10 +5,15 @@ import com.eleks.academy.whoami.core.SynchronousPlayer;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public final class GameFinished extends AbstractGameState {
+public final class GameFinished implements GameState {
+
+	private final int playersInGame;
+
+	private final int maxPlayers;
 
 	public GameFinished(int playersInGame, int maxPlayers) {
-		super(playersInGame, maxPlayers);
+		this.playersInGame = playersInGame;
+		this.maxPlayers = maxPlayers;
 	}
 
 	@Override
@@ -28,6 +33,11 @@ public final class GameFinished extends AbstractGameState {
 	}
 
 	@Override
+	public String getStatus() {
+		return null;
+	}
+
+	@Override
 	public boolean isReadyToNextState() {
 		// TODO Auto-generated method stub
 		return false;
@@ -43,5 +53,10 @@ public final class GameFinished extends AbstractGameState {
 	public Stream<SynchronousPlayer> getPlayersList() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public int getPlayersInGame() {
+		return this.playersInGame;
 	}
 }

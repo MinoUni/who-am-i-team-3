@@ -1,10 +1,7 @@
 package com.eleks.academy.whoami.core.impl;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
 
@@ -71,16 +68,19 @@ public class PersistentGame implements SynchronousGame {
 
 	@Override
 	public String getPlayersInGame() {
+		assert this.currentState.peek() != null;
 		return Integer.toString(this.currentState.peek().getPlayersInGame());
 	}
 	
 	@Override
 	public List<BasePlayerModel> getPlayersList() {
+		assert this.currentState.peek() != null;
 		return this.currentState.peek().getPlayersList().map(BasePlayerModel::of).toList();
 	}
 	
 	@Override
 	public Map<String, String> getMap() {
+		assert currentState.peek() != null;
 		return ((ProcessingQuestion)currentState.peek()).getMap();
 	}
 	
@@ -114,15 +114,17 @@ public class PersistentGame implements SynchronousGame {
 	@Override
 	public SynchronousGame start() {
 //		this.currentState.peek().next();
-		this.currentState.add(currentState.poll().next());
+		this.currentState.add(Objects.requireNonNull(currentState.poll()).next());
 		return this; 
 	}
 	
 	@Override
 	public boolean isAvailable() {
+		assert currentState.peek() != null;
 		if (currentState.peek().getPlayersInGame() == maxPlayers && currentState.peek() instanceof WaitingForPlayers) {
 			currentState.add(currentState.poll().next());
 		}
+		assert currentState.peek() != null;
 		return currentState.peek().getPlayersInGame() < maxPlayers && currentState.peek() instanceof WaitingForPlayers;
 	}
 
@@ -136,6 +138,6 @@ public class PersistentGame implements SynchronousGame {
 	
 	private String generateNickname() {
 //		int token = ((int) (Math.random() * (65535 - 49152)) + 49152);
-		return "Player " + Integer.toString(++token);
+		return "Player " + ++token;
 	}
 }
