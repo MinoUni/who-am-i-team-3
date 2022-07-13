@@ -11,7 +11,9 @@ import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 public class PersistentPlayer implements SynchronousPlayer {
 
 	private final String name;
-	
+
+	private final String id;
+
 	private String characterSuggestion;
 	
 	private boolean isSuggested = Boolean.FALSE;
@@ -21,6 +23,7 @@ public class PersistentPlayer implements SynchronousPlayer {
 	private boolean isCharacterAssigned = Boolean.FALSE;
 	
 	public PersistentPlayer(String name) {
+		this.id = Objects.requireNonNull(name);
 		this.name = Objects.requireNonNull(name);
 	}
 	

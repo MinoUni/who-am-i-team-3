@@ -46,7 +46,7 @@ public class GameServiceImpl implements GameService {
 
 		if (games.isEmpty()) {
 
-			final SynchronousGame game = gameRepository.save(new PersistentGame(4));
+			final SynchronousGame game = gameRepository.save(new PersistentGame(gameRequest.getMaxPlayers()));
 			enrollToGame(game.getId(), player);
 
 			return gameRepository.findById(game.getId()).map(GameDetails::of);
