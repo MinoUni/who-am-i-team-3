@@ -28,111 +28,114 @@ import static com.eleks.academy.whoami.utils.StringUtils.Headers.PLAYER;
 @RequiredArgsConstructor
 public class GameController {
 
-	private final GameService gameService;
+    private final GameService gameService;
 
-	@GetMapping
-	public List<GameLight> findAvailableGames(@RequestHeader(PLAYER) String player) {
-		return this.gameService.findAvailableGames(player);
-	}
-	
-	@GetMapping("/info")
-	public List<AllFields> findAllGamesInfo(@RequestHeader(PLAYER) String player) {
-		return this.gameService.findAllGamesInfo(player);
-	}
-	
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<GameDetails> createGame(@RequestHeader(PLAYER) String player,
-								  @Valid @RequestBody NewGameRequest gameRequest) {
-		
-		return this.gameService.createGame(player, gameRequest)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<GameLight> findAvailableGames(@RequestHeader(PLAYER) String player) {
+        return this.gameService.findAvailableGames(player);
+    }
 
-	@GetMapping("/{id}")
-	public ResponseEntity<GameDetails> findById(@PathVariable("id") String id,
-												@RequestHeader(PLAYER) String player) {
-		return this.gameService.findByIdAndPlayer(id, player)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping("/info")
+    public List<AllFields> findAllGamesInfo(@RequestHeader(PLAYER) String player) {
+        return this.gameService.findAllGamesInfo(player);
+    }
 
-	@PostMapping("/{id}/players")
-	public SynchronousPlayer enrollToGame(@PathVariable("id") String id,
-										  @RequestHeader(PLAYER) String player) {
-		return this.gameService.enrollToGame(id, player);
-	}
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<GameDetails> createGame(@RequestHeader(PLAYER) String player,
+                                                  @Valid @RequestBody NewGameRequest gameRequest) {
 
-	@PostMapping("/{id}/characters")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<PlayerSuggestion> suggestCharacter(@PathVariable("id") String id,
-															 @RequestHeader(PLAYER) String player,
-															 @Valid @RequestBody CharacterSuggestion suggestion) {
-		
-		return this.gameService.suggestCharacter(id, player, suggestion)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.badRequest().build());
-	}
+        return this.gameService.createGame(player, gameRequest)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	@GetMapping("/{id}/turn")
-	public ResponseEntity<TurnDetails> findTurnInfo(@PathVariable("id") String id,
-													@RequestHeader(PLAYER) String player) {
-		
-		return this.gameService.findTurnInfo(id, player)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
-	
-	@PostMapping("/{id}")
-	public ResponseEntity<StartGameModel> startGame(@PathVariable("id") String id,
-												 @RequestHeader(PLAYER) String player) {
-		return this.gameService.startGame(id, player)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<GameDetails> findById(@PathVariable("id") String id,
+                                                @RequestHeader(PLAYER) String player) {
+        return this.gameService.findByIdAndPlayer(id, player)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	@PostMapping("/{id}/questions")
-	public void askQuestion(@PathVariable("id") String id,
-							@RequestHeader(PLAYER) String player, @RequestBody Message message) {
-		
-		this.gameService.askQuestion(id, player, message.getMessage());
-	}
+    @PostMapping("/{id}/players")
+    public SynchronousPlayer enrollToGame(@PathVariable("id") String id,
+                                          @RequestHeader(PLAYER) String player) {
+        return this.gameService.enrollToGame(id, player);
+    }
 
-	@PostMapping("/{id}/guess")
-	public void submitGuess(@PathVariable("id") String id,
-							@RequestHeader(PLAYER) String player, @RequestBody Message message) {
-		
-		this.gameService.submitGuess(id, player, message.getMessage());
-	}
+    @PostMapping("/{id}/characters")
+    @ResponseStatus(HttpStatus.OK)
+    public void suggestCharacter(@PathVariable("id") String id,
+                                 @RequestHeader(PLAYER) String player,
+                                 @Valid @RequestBody CharacterSuggestion suggestion) {
 
-	@PostMapping("/{id}/answer")
-	public void answerQuestion(@PathVariable("id") String id,
-							   @RequestHeader(PLAYER) String player, @RequestBody Message message) {
-		
-		this.gameService.answerQuestion(id, player, message.getMessage());
+        this.gameService.suggestCharacter(id, player, suggestion)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.badRequest().build());
+    }
 
-	}
-	
-	@PostMapping("/quick")
-	public ResponseEntity<QuickGame> findQuickGame(@RequestHeader(PLAYER) String player) {
-		
-		return this.gameService.findQuickGame(player)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    @GetMapping("/{id}/turn")
+    public ResponseEntity<TurnDetails> findTurnInfo(@PathVariable("id") String id,
+                                                    @RequestHeader(PLAYER) String player) {
 
-	@DeleteMapping("/{id}/leave")
-	public ResponseEntity<LeaveModel> leaveGame(@PathVariable("id") String id,
-												@RequestHeader(PLAYER) String player) {
-		
-		return this.gameService.leaveGame(id, player)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
-	}
+        return this.gameService.findTurnInfo(id, player)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-	@GetMapping("/all-players-count")
-	public Integer getAllPlayersCount(@RequestHeader(PLAYER) String player) {
-		return this.gameService.getAllPlayersCount();
-	}
+    @PostMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<GameDetails> startGame(@PathVariable("id") String id,
+                                                 @RequestHeader(PLAYER) String player) {
+        return this.gameService.startGame(id, player)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/{id}/questions")
+    public void askQuestion(@PathVariable("id") String id,
+                            @RequestHeader(PLAYER) String player, @RequestBody Message message) {
+
+        this.gameService.askQuestion(id, player, message.getMessage());
+    }
+
+    @PostMapping("/{id}/guess")
+    public void submitGuess(@PathVariable("id") String id,
+                            @RequestHeader(PLAYER) String player, @RequestBody Message message) {
+
+        this.gameService.submitGuess(id, player, message.getMessage());
+    }
+
+    @PostMapping("/{id}/answer")
+    public void answerQuestion(@PathVariable("id") String id,
+                               @RequestHeader(PLAYER) String player, @RequestBody Message message) {
+
+        this.gameService.answerQuestion(id, player, message.getMessage());
+
+    }
+
+    @PostMapping("/quick")
+    public ResponseEntity<QuickGame> findQuickGame(@RequestHeader(PLAYER) String player) {
+
+        return this.gameService.findQuickGame(player)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}/leave")
+    public ResponseEntity<LeaveModel> leaveGame(@PathVariable("id") String id,
+                                                @RequestHeader(PLAYER) String player) {
+
+        return this.gameService.leaveGame(id, player)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/all-players-count")
+    public Integer getAllPlayersCount(@RequestHeader(PLAYER) String player) {
+        return this.gameService.getAllPlayersCount();
+    }
 }

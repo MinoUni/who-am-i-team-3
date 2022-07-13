@@ -100,11 +100,11 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public Optional<StartGameModel> startGame(String id, String player) {
+	public Optional<GameDetails> startGame(String id, String player) {
 		return this.gameRepository.findById(id)
 							.filter(g -> g.getState().isReadyToNextState() && g.getState() instanceof SuggestingCharacters)
 							.map(SynchronousGame::start)
-							.map(StartGameModel::of);
+							.map(GameDetails::of);
 	}
 
 	@Override
