@@ -4,15 +4,13 @@ import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 
 public interface SynchronousPlayer {
 
-	String getUserName();
+	String getName();
 
 	String getCharacterSuggestion();
 	
 	void suggest(CharacterSuggestion suggestion);
 
 	boolean isSuggest();
-
-	String getNickName();
 
 	String getGameCharacter();
 

@@ -21,7 +21,6 @@ import com.eleks.academy.whoami.model.response.AllFields;
 import com.eleks.academy.whoami.model.response.GameDetails;
 import com.eleks.academy.whoami.model.response.GameLight;
 import com.eleks.academy.whoami.model.response.LeaveModel;
-import com.eleks.academy.whoami.model.response.PlayerSuggestion;
 import com.eleks.academy.whoami.model.response.QuickGame;
 import com.eleks.academy.whoami.model.response.TurnDetails;
 import com.eleks.academy.whoami.repository.GameRepository;
@@ -71,7 +70,8 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public Optional<GameDetails> findByIdAndPlayer(String id, String player) {
-		return this.gameRepository.findById(id).filter(game -> game.findPlayer(player).isPresent())
+		return this.gameRepository.findById(id)
+				.filter(game -> game.findPlayer(player).isPresent())
 				.map(GameDetails::of);
 	}
 

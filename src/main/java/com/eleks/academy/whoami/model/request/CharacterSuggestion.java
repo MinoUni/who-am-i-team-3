@@ -12,10 +12,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class CharacterSuggestion {
 
-//	@NotBlank(message = "Nickname may not be blank")
-//	@Size(min = 2, max = 50, message = "Nickname must be between 2 and 50 characters long")
-//	private String nickname;
-
 	@NotBlank(message = "Character may not be blank")
 	@Size(min = 2, max = 50, message = "Character must be between 2 and 50 characters long")
 	private String character;

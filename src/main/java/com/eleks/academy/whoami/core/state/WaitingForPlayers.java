@@ -2,15 +2,16 @@ package com.eleks.academy.whoami.core.state;
 
 import com.eleks.academy.whoami.core.SynchronousPlayer;
 import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
+import com.eleks.academy.whoami.model.request.QuestionAnswer;
+import com.eleks.academy.whoami.model.response.PlayerState;
+import com.eleks.academy.whoami.model.response.PlayerWithState;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import com.eleks.academy.whoami.model.response.PlayerWithState;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 public final class WaitingForPlayers implements GameState {
 
@@ -31,8 +32,8 @@ public final class WaitingForPlayers implements GameState {
 	}
 
 	@Override
-	public int getPlayersInGame() {
-		return this.players.size();
+	public String getPlayersInGame() {
+		return Integer.toString(this.players.size());
 	}
 	
 	@Override
@@ -64,7 +65,8 @@ public final class WaitingForPlayers implements GameState {
 	}
 	
 	public SynchronousPlayer add(SynchronousPlayer player) {
-		players.put(player.getUserName(), new PlayerWithState(player, null, null));
+		this.players.put(player.getName(),
+				new PlayerWithState(player, QuestionAnswer.NOT_SURE, PlayerState.NOT_READY));
 		return player;
 	}
 

@@ -75,8 +75,8 @@ public final class ProcessingQuestion implements GameState {
 	}
 
 	@Override
-	public int getPlayersInGame() {
-		return 0;
+	public String getPlayersInGame() {
+		return Integer.toString(this.players.size());
 	}
 
 }

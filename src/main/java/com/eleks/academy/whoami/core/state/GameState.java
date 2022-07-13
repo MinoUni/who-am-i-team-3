@@ -52,7 +52,7 @@ public interface GameState {
 	 *
 	 * @return the count of the players currently in game
 	 */
-	int getPlayersInGame();
+	String getPlayersInGame();
 	
 	/* @return player
 	 * @throw ResponseStatusException(404) -> PlayerNotFoundException

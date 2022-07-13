@@ -10,9 +10,7 @@ import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 
 public class PersistentPlayer implements SynchronousPlayer {
 
-	private final String username;
-	
-	private String nickname;
+	private final String name;
 	
 	private String characterSuggestion;
 	
@@ -22,9 +20,8 @@ public class PersistentPlayer implements SynchronousPlayer {
 	
 	private boolean isCharacterAssigned = Boolean.FALSE;
 	
-	public PersistentPlayer(String username) {
-		this.username = Objects.requireNonNull(username);
-		this.nickname = Objects.requireNonNull(nickname);
+	public PersistentPlayer(String name) {
+		this.name = Objects.requireNonNull(name);
 	}
 	
 	@Override
@@ -37,22 +34,13 @@ public class PersistentPlayer implements SynchronousPlayer {
 		return isCharacterAssigned;
 	}
 	
-	private void setNickName(String nickname) {
-		this.nickname = nickname;
-	}
-
 	private void setCharacter(String character) {
 		this.characterSuggestion = character;
 	}
 	
 	@Override
-	public String getUserName() {
-		return this.username;
-	}
-	
-	@Override
-	public String getNickName() {
-		return this.nickname;
+	public String getName() {
+		return this.name;
 	}
 	
 	@Override
@@ -77,7 +65,6 @@ public class PersistentPlayer implements SynchronousPlayer {
 	public void suggest(CharacterSuggestion suggestion) {
 		if (!this.isSuggested) {
 			this.isSuggested = Boolean.TRUE;
-//			setNickName(suggestion.getNickname());
 			setCharacter(suggestion.getCharacter());
 		}
 		else {

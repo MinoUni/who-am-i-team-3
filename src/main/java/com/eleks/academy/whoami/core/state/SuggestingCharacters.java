@@ -34,7 +34,7 @@ public final class SuggestingCharacters implements GameState {
     private final Map<String, String> playerCharacterMap;
 
     public SuggestingCharacters(Map<String, PlayerWithState> players) {
-        this.players = players;
+        this.players = new ConcurrentHashMap<>(players);
         this.suggestedCharacters = new HashMap<>(this.players.size());
         this.playerCharacterMap = new ConcurrentHashMap<>(this.players.size());
     }
@@ -70,8 +70,8 @@ public final class SuggestingCharacters implements GameState {
     }
 
     @Override
-    public int getPlayersInGame() {
-        return 0;
+    public String getPlayersInGame() {
+        return Integer.toString(this.players.size());
     }
 
     @Override
@@ -135,17 +135,17 @@ public final class SuggestingCharacters implements GameState {
     }
 
     private void suggestCharacter(SynchronousPlayer player) {
-        List<GameCharacter> characters = this.suggestedCharacters.get(player.getUserName());
+        List<GameCharacter> characters = this.suggestedCharacters.get(player.getName());
 
         if (Objects.isNull(characters)) {
             final var newCharacters = new ArrayList<GameCharacter>();
 
-            this.suggestedCharacters.put(player.getUserName(), newCharacters);
+            this.suggestedCharacters.put(player.getName(), newCharacters);
 
             characters = newCharacters;
         }
 
-        characters.add(GameCharacter.of(player.getCharacterSuggestion(), player.getUserName()));
+        characters.add(GameCharacter.of(player.getCharacterSuggestion(), player.getName()));
 
     }
 

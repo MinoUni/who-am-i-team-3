@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LeaveModel {
-	
-	private String username;
-	
-	private String gameId;
-	
+
+	private String id;
+
+	private String name;
+
 	public static LeaveModel of(SynchronousPlayer player, String gameId) {
 		return LeaveModel.builder()
-				.username(player.getUserName())
-				.gameId(gameId)
+				.id(gameId)
+				.name(player.getName())
 				.build();
 	}
 }

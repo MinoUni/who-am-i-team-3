@@ -8,9 +8,7 @@ import com.eleks.academy.whoami.model.response.AllFields;
 import com.eleks.academy.whoami.model.response.GameDetails;
 import com.eleks.academy.whoami.model.response.GameLight;
 import com.eleks.academy.whoami.model.response.LeaveModel;
-import com.eleks.academy.whoami.model.response.PlayerSuggestion;
 import com.eleks.academy.whoami.model.response.QuickGame;
-import com.eleks.academy.whoami.model.response.StartGameModel;
 import com.eleks.academy.whoami.model.response.TurnDetails;
 import com.eleks.academy.whoami.service.GameService;
 import lombok.RequiredArgsConstructor;
@@ -125,7 +123,7 @@ public class GameController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-//    @DeleteMapping("/{id}/leave")
+    @DeleteMapping("/{id}/leave")
     public ResponseEntity<LeaveModel> leaveGame(@PathVariable("id") String id,
                                                 @RequestHeader(PLAYER) String player) {
 

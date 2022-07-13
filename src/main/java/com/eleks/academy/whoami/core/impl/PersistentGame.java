@@ -22,7 +22,6 @@ public class PersistentGame implements SynchronousGame {
 
 	private final Queue<GameState> currentState = new LinkedBlockingQueue<>();
 	
-	private int token = 0;
 	/*
 	 * Creates a new custom game (game room) and makes a first enrollment turn by a current
 	 * player so that he won't have to enroll to the game he created
@@ -69,22 +68,13 @@ public class PersistentGame implements SynchronousGame {
 
 	@Override
 	public String getPlayersInGame() {
-		assert this.currentState.peek() != null;
-		return Integer.toString(this.currentState.peek().getPlayersInGame());
+		return this.currentState.peek().getPlayersInGame();
 	}
 	
 	@Override
 	public List<PlayerWithState> getPlayersList() {
-		assert this.currentState.peek() != null;
 		return this.currentState.peek().getPlayersList().collect(Collectors.toList());
 	}
-	
-	@Override
-	public Map<String, String> getMap() {
-		assert currentState.peek() != null;
-		return ((ProcessingQuestion)currentState.peek()).getMap();
-	}
-	
 	
 	@Override
 	public Optional<SynchronousPlayer> findPlayer(String player) {
@@ -121,12 +111,10 @@ public class PersistentGame implements SynchronousGame {
 	
 	@Override
 	public boolean isAvailable() {
-		assert currentState.peek() != null;
-		if (currentState.peek().getPlayersInGame() == maxPlayers && currentState.peek() instanceof WaitingForPlayers) {
+		if (currentState.peek().isReadyToNextState()) {
 			currentState.add(currentState.poll().next());
 		}
-		assert currentState.peek() != null;
-		return currentState.peek().getPlayersInGame() < maxPlayers && currentState.peek() instanceof WaitingForPlayers;
+		return Integer.parseInt(getPlayersInGame()) < maxPlayers && currentState.peek() instanceof WaitingForPlayers;
 	}
 
 	private <T, R> R applyIfPresent(T source, Function<T, R> mapper) {

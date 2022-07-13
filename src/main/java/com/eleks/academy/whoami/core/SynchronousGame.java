@@ -29,6 +29,4 @@ public interface SynchronousGame {
 
 	GameState getState();
 
-	Map<String, String> getMap();
-
 }
