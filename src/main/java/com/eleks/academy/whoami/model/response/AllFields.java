@@ -23,7 +23,7 @@ private String id;
 	
 	private String playersInGame;
 	
-	private List<BasePlayerModel> players;
+	private List<PlayerWithState> players;
 	
 	public static AllFields of(SynchronousGame game) {
 		return AllFields.builder()

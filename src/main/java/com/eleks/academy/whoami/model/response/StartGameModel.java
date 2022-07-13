@@ -21,7 +21,7 @@ public class StartGameModel {
 	
 	private String playersInGame;
 	
-	private List<BasePlayerModel> players;
+	private List<PlayerWithState> players;
 	
 	public static StartGameModel of(SynchronousGame game) {
 		return StartGameModel.builder()

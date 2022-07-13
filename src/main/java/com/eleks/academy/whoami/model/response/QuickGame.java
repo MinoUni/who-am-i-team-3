@@ -23,7 +23,7 @@ public class QuickGame {
 	
 	private String playersInGame;
 	
-	private List<BasePlayerModel> players;
+	private List<PlayerWithState> players;
 	
 	public static QuickGame of(SynchronousGame game) {
 		return QuickGame.builder()
