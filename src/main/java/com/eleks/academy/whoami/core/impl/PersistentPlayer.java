@@ -22,9 +22,9 @@ public class PersistentPlayer implements SynchronousPlayer {
 	
 	private boolean isCharacterAssigned = Boolean.FALSE;
 	
-	public PersistentPlayer(String id, String name) {
+	public PersistentPlayer(String id) {
 		this.id = Objects.requireNonNull(id);
-		this.name = Objects.requireNonNull(name);
+//		this.name = Objects.requireNonNull(name);
 	}
 
 	@Override

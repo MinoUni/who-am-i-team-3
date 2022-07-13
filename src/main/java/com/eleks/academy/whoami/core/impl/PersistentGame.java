@@ -90,7 +90,7 @@ public class PersistentGame implements SynchronousGame {
     @Override
     public SynchronousPlayer enrollToGame(String player) {
         if (isAvailable()) {
-            var newPlayer = new PersistentPlayer(player, getToken());
+            var newPlayer = new PersistentPlayer(player);
             ((WaitingForPlayers) gameState.peek()).add(newPlayer);
             if (gameState.peek().getPlayersInGame().equals("4")) {
                 this.gameState.add(Objects.requireNonNull(this.gameState.poll()).next());
