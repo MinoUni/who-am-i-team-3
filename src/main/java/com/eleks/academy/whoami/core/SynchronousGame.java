@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.eleks.academy.whoami.core.state.GameState;
-import com.eleks.academy.whoami.model.response.BasePlayerModel;
+import com.eleks.academy.whoami.model.response.PlayerWithState;
 
 public interface SynchronousGame {
 
@@ -25,7 +25,7 @@ public interface SynchronousGame {
 
 	Optional<SynchronousPlayer> deletePlayerFromGame(String player);
 
-	List<BasePlayerModel> getPlayersList();
+	List<PlayerWithState> getPlayersList();
 
 	GameState getState();
 

@@ -8,13 +8,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import com.eleks.academy.whoami.model.response.PlayerWithState;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 public final class WaitingForPlayers implements GameState {
 
 	private final int maxPlayers;
-	private final Map<String, SynchronousPlayer> players;
+	private final Map<String, PlayerWithState> players;
 
 	public WaitingForPlayers(int maxPlayers) {
 		this.maxPlayers = maxPlayers;
@@ -35,7 +36,7 @@ public final class WaitingForPlayers implements GameState {
 	}
 	
 	@Override
-	public Stream<SynchronousPlayer> getPlayersList() {
+	public Stream<PlayerWithState> getPlayersList() {
 		return this.players.values().stream();
 	}
 	
@@ -51,19 +52,19 @@ public final class WaitingForPlayers implements GameState {
 
 	@Override
 	public Optional<SynchronousPlayer> findPlayer(String player) {
-		return Optional.ofNullable(this.players.get(player));
+		return Optional.ofNullable(this.players.get(player).getPlayer());
 	}
 
 	@Override
 	public Optional<SynchronousPlayer> remove(String player) {
 		
 		if (findPlayer(player).isPresent()) {
-			return Optional.of(this.players.remove(player));
+			return Optional.of(this.players.remove(player).getPlayer());
 		} else throw new PlayerNotFoundException("[" + player + "] not found.");
 	}
 	
 	public SynchronousPlayer add(SynchronousPlayer player) {
-		players.put(player.getUserName(), player);
+		players.put(player.getUserName(), new PlayerWithState(player, null, null));
 		return player;
 	}
 

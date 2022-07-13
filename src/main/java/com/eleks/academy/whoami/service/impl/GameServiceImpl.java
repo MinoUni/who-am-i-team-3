@@ -43,7 +43,6 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public Optional<GameDetails> createGame(String player, NewGameRequest gameRequest) {
-//		final var game = this.gameRepository.save(new PersistentGame(player, gameRequest.getMaxPlayers()));
 
 		Map<String, SynchronousGame> games = gameRepository.findAvailableQuickGames();
 
@@ -61,7 +60,6 @@ public class GameServiceImpl implements GameService {
 		return gameRepository.findById(games.get(FirstGame).getId()).map(GameDetails::of);
 	}
 
-	//TODO: implement validations for create custom game
 	@Override
 	public SynchronousPlayer enrollToGame(String id, String player) {
 		
@@ -85,7 +83,7 @@ public class GameServiceImpl implements GameService {
 	public Optional<PlayerSuggestion> suggestCharacter(String id, String player, CharacterSuggestion suggestion) {
 
 		this.gameRepository.findById(id)
-				.filter(g -> g.isAvailable() == false && g.getState() instanceof SuggestingCharacters)
+				.filter(g -> !g.isAvailable() && g.getState() instanceof SuggestingCharacters)
 				.map(game -> game.findPlayer(player))
 				.ifPresentOrElse(p -> p.ifPresentOrElse(then -> then.suggest(suggestion), 
 											() -> {

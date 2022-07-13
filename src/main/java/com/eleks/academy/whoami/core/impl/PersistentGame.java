@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.eleks.academy.whoami.core.SynchronousGame;
 import com.eleks.academy.whoami.core.SynchronousPlayer;
@@ -11,7 +12,7 @@ import com.eleks.academy.whoami.core.exception.GameNotFoundException;
 import com.eleks.academy.whoami.core.state.GameState;
 import com.eleks.academy.whoami.core.state.ProcessingQuestion;
 import com.eleks.academy.whoami.core.state.WaitingForPlayers;
-import com.eleks.academy.whoami.model.response.BasePlayerModel;
+import com.eleks.academy.whoami.model.response.PlayerWithState;
 
 public class PersistentGame implements SynchronousGame {
 
@@ -73,9 +74,9 @@ public class PersistentGame implements SynchronousGame {
 	}
 	
 	@Override
-	public List<BasePlayerModel> getPlayersList() {
+	public List<PlayerWithState> getPlayersList() {
 		assert this.currentState.peek() != null;
-		return this.currentState.peek().getPlayersList().map(BasePlayerModel::of).toList();
+		return this.currentState.peek().getPlayersList().collect(Collectors.toList());
 	}
 	
 	@Override
