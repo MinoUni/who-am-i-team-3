@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
+import com.eleks.academy.whoami.model.response.PlayerWithState;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,11 +17,11 @@ public final class ProcessingQuestion implements GameState {
 
 	private final String currentPlayer;
 	
-	private final Map<String, SynchronousPlayer> players;
+	private final Map<String, PlayerWithState> players;
 	
 	private final Map<String, String> playerCharacterMap;
 	
-	public ProcessingQuestion(Map<String, SynchronousPlayer> players) {
+	public ProcessingQuestion(Map<String, PlayerWithState> players) {
 		this.players = players;
 		this.playerCharacterMap = new ConcurrentHashMap<>();
 		
@@ -37,7 +38,7 @@ public final class ProcessingQuestion implements GameState {
 
 	@Override
 	public Optional<SynchronousPlayer> findPlayer(String player) {
-		return Optional.ofNullable(this.players.get(player));
+		return Optional.ofNullable(this.players.get(player).getPlayer());
 	}
 	
 	public Map<String, String> getMap() {
@@ -69,7 +70,7 @@ public final class ProcessingQuestion implements GameState {
 	}
 
 	@Override
-	public Stream<SynchronousPlayer> getPlayersList() {
+	public Stream<PlayerWithState> getPlayersList() {
 		return this.players.values().stream();
 	}
 
