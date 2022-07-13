@@ -93,11 +93,11 @@ public class PersistentGame implements SynchronousGame {
 
 	@Override
 	public SynchronousPlayer enrollToGame(String player) {
-		
+		//TODO: Make that enroll only at WFP-State, at other states only leave
 		GameState state = currentState.peek();
 
 		if (state instanceof WaitingForPlayers) {
-			return ((WaitingForPlayers)state).add(new PersistentPlayer(player, generateNickname()));
+			return ((WaitingForPlayers)state).add(new PersistentPlayer(player));
 		} else throw new GameNotFoundException("Game [" + this.getId() + "] already at " + this.getStatus() + " state.");
 	}
 
@@ -136,9 +136,5 @@ public class PersistentGame implements SynchronousGame {
 	private <T, R> R applyIfPresent(T source, Function<T, R> mapper, R fallback) {
 		return Optional.ofNullable(source).map(mapper).orElse(fallback);
 	}
-	
-	private String generateNickname() {
-//		int token = ((int) (Math.random() * (65535 - 49152)) + 49152);
-		return "Player " + ++token;
-	}
+
 }
