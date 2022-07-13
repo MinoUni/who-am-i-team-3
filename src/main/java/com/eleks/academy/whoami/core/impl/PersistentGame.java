@@ -90,8 +90,13 @@ public class PersistentGame implements SynchronousGame {
     @Override
     public SynchronousPlayer enrollToGame(String player) {
         //TODO: Make that enroll only at WFP-State, at other states only leave
-        if (this.gameState.peek() instanceof WaitingForPlayers) {
-            return ((WaitingForPlayers) gameState.peek()).add(new PersistentPlayer(player));
+        if (isAvailable()) {
+            var newPlayer = new PersistentPlayer(player);
+            ((WaitingForPlayers) gameState.peek()).add(newPlayer);
+            if (gameState.peek().getPlayersInGame().equals("4")) {
+                this.gameState.add(Objects.requireNonNull(this.gameState.poll()).next());
+            }
+            return newPlayer;
         } else
             throw new GameNotFoundException("Game [" + this.getId() + "] already at " + this.getStatus() + " state.");
     }
@@ -116,10 +121,6 @@ public class PersistentGame implements SynchronousGame {
 
     @Override
     public boolean isAvailable() {
-        GameState state = this.gameState.peek();
-        if (state instanceof WaitingForPlayers && state.getPlayersInGame().equals("4")) {
-            this.gameState.add(Objects.requireNonNull(this.gameState.poll()).next());
-        }
         return this.gameState.peek() instanceof WaitingForPlayers;
     }
 
