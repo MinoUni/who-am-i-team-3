@@ -55,6 +55,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GameDetails> findById(@PathVariable("id") String id,
                                                 @RequestHeader(PLAYER) String player) {
+
         return this.gameService.findByIdAndPlayer(id, player)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
@@ -72,9 +73,7 @@ public class GameController {
                                  @RequestHeader(PLAYER) String player,
                                  @Valid @RequestBody CharacterSuggestion suggestion) {
 
-        this.gameService.suggestCharacter(id, player, suggestion)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.badRequest().build());
+        this.gameService.suggestCharacter(id, player, suggestion);
     }
 
     @GetMapping("/{id}/turn")
@@ -90,6 +89,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GameDetails> startGame(@PathVariable("id") String id,
                                                  @RequestHeader(PLAYER) String player) {
+
         return this.gameService.startGame(id, player)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
