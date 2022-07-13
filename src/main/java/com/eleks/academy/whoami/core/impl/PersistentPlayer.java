@@ -67,7 +67,7 @@ public class PersistentPlayer implements SynchronousPlayer {
 	
 	@Override
 	public void setGameCharacter(String gameCharacter) {
-		if (this.isCharacterAssigned == false) {
+		if (!this.isCharacterAssigned) {
 			this.isCharacterAssigned = Boolean.TRUE;
 			this.gameCharacter = gameCharacter;
 		}
@@ -75,9 +75,9 @@ public class PersistentPlayer implements SynchronousPlayer {
 	
 	@Override
 	public void suggest(CharacterSuggestion suggestion) {
-		if (this.isSuggested == false) {
+		if (!this.isSuggested) {
 			this.isSuggested = Boolean.TRUE;
-			setNickName(suggestion.getNickname());
+//			setNickName(suggestion.getNickname());
 			setCharacter(suggestion.getCharacter());
 		}
 		else {

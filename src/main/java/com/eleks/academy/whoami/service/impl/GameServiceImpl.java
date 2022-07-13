@@ -23,7 +23,6 @@ import com.eleks.academy.whoami.model.response.GameLight;
 import com.eleks.academy.whoami.model.response.LeaveModel;
 import com.eleks.academy.whoami.model.response.PlayerSuggestion;
 import com.eleks.academy.whoami.model.response.QuickGame;
-import com.eleks.academy.whoami.model.response.StartGameModel;
 import com.eleks.academy.whoami.model.response.TurnDetails;
 import com.eleks.academy.whoami.repository.GameRepository;
 import com.eleks.academy.whoami.service.GameService;
@@ -80,7 +79,7 @@ public class GameServiceImpl implements GameService {
 	 *TODO: check gameState 
 	 */
 	@Override
-	public Optional<PlayerSuggestion> suggestCharacter(String id, String player, CharacterSuggestion suggestion) {
+	public void suggestCharacter(String id, String player, CharacterSuggestion suggestion) {
 
 		this.gameRepository.findById(id)
 				.filter(g -> !g.isAvailable() && g.getState() instanceof SuggestingCharacters)
@@ -94,9 +93,6 @@ public class GameServiceImpl implements GameService {
 							throw new GameNotFoundException("SUGGESTINGCHARACTERS: Game with id[" + id + "] not found.");
 						}
 				);
-		
-		SynchronousPlayer ingamePlayer = gameRepository.findById(id).flatMap(game -> game.findPlayer(player)).get();
-		return Optional.of(PlayerSuggestion.of(ingamePlayer));
 	}
 
 	@Override
