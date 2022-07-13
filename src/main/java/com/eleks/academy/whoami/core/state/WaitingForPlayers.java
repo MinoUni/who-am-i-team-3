@@ -65,7 +65,7 @@ public final class WaitingForPlayers implements GameState {
 	}
 	
 	public SynchronousPlayer add(SynchronousPlayer player) {
-		this.players.put(player.getName(),
+		this.players.put(player.getId(),
 				new PlayerWithState(player, QuestionAnswer.NOT_SURE, PlayerState.NOT_READY));
 		return player;
 	}

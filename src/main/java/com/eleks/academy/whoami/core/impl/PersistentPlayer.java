@@ -22,11 +22,16 @@ public class PersistentPlayer implements SynchronousPlayer {
 	
 	private boolean isCharacterAssigned = Boolean.FALSE;
 	
-	public PersistentPlayer(String name) {
-		this.id = Objects.requireNonNull(name);
+	public PersistentPlayer(String id, String name) {
+		this.id = Objects.requireNonNull(id);
 		this.name = Objects.requireNonNull(name);
 	}
-	
+
+	@Override
+	public String getId() {
+		return id;
+	}
+
 	@Override
 	public boolean isSuggest() {
 		return isSuggested;

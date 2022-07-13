@@ -4,6 +4,8 @@ import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 
 public interface SynchronousPlayer {
 
+	String getId();
+
 	String getName();
 
 	String getCharacterSuggestion();
