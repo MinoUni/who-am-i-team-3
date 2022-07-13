@@ -45,7 +45,7 @@ public final class GameFinished implements GameState {
 	}
 
 	@Override
-	public Optional<SynchronousPlayer> remove(String player) {
+	public Optional<SynchronousPlayer> leave(String player) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -57,8 +57,7 @@ public final class WaitingForPlayers implements GameState {
 	}
 
 	@Override
-	public Optional<SynchronousPlayer> remove(String player) {
-		
+	public Optional<SynchronousPlayer> leave(String player) {
 		if (findPlayer(player).isPresent()) {
 			return Optional.of(this.players.remove(player).getPlayer());
 		} else throw new PlayerNotFoundException("[" + player + "] not found.");

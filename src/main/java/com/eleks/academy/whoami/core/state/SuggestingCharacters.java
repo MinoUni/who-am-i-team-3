@@ -17,6 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -94,9 +95,10 @@ public final class SuggestingCharacters implements GameState {
     }
 
     @Override
-    public Optional<SynchronousPlayer> remove(String player) {
-        // TODO Auto-generated method stub
-        throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+    public Optional<SynchronousPlayer> leave(String player) {
+        if (findPlayer(player).isPresent()) {
+            return Optional.of(this.players.remove(player).getPlayer());
+        } else throw new PlayerNotFoundException("[" + player + "] not found.");
     }
 
     private GameState assign() {

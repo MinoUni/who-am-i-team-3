@@ -155,7 +155,7 @@ public class GameServiceImpl implements GameService {
 			if (game.isPresent()) {
 				
 				this.gameRepository.deletePlayerByHeader(player);
-				return Optional.of(LeaveModel.of(game.get().deletePlayerFromGame(player).get(), id));
+				return Optional.of(LeaveModel.of(game.get().leaveGame(player).get(), id));
 				
 			} else throw new GameNotFoundException("Game with id[" + id + "] not found.");
 			

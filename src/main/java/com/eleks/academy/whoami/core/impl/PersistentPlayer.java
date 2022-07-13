@@ -10,7 +10,7 @@ import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 
 public class PersistentPlayer implements SynchronousPlayer {
 
-	private final String name;
+	private String name;
 
 	private final String id;
 
@@ -45,7 +45,11 @@ public class PersistentPlayer implements SynchronousPlayer {
 	private void setCharacter(String character) {
 		this.characterSuggestion = character;
 	}
-	
+
+	private void setName(String name) {
+		this.name = name;
+	}
+
 	@Override
 	public String getName() {
 		return this.name;
@@ -74,6 +78,7 @@ public class PersistentPlayer implements SynchronousPlayer {
 		if (!this.isSuggested) {
 			this.isSuggested = Boolean.TRUE;
 			setCharacter(suggestion.getCharacter());
+			setName(suggestion.getName());
 		}
 		else {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Suggestion has already been submitted!");

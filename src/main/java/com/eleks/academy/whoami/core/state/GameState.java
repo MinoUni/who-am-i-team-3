@@ -62,6 +62,6 @@ public interface GameState {
 	/* @return player that was removed from game
 	 * @throw ResponseStatusException(404) -> PlayerNotFoundException
 	 */	
-	Optional<SynchronousPlayer> remove(String player);
+	Optional<SynchronousPlayer> leave(String player);
 	
 }

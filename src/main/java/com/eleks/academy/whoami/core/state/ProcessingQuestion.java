@@ -65,7 +65,7 @@ public final class ProcessingQuestion implements GameState {
 	}
 
 	@Override
-	public Optional<SynchronousPlayer> remove(String player) {
+	public Optional<SynchronousPlayer> leave(String player) {
 		throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 	}
 

@@ -111,8 +111,8 @@ public class PersistentGame implements SynchronousGame {
      *
      */
     @Override
-    public Optional<SynchronousPlayer> deletePlayerFromGame(String player) {
-        return this.applyIfPresent(this.gameState.peek(), gameState -> gameState.remove(player));
+    public Optional<SynchronousPlayer> leaveGame(String player) {
+        return this.applyIfPresent(this.gameState.peek(), gameState -> gameState.leave(player));
     }
 
     @Override
