@@ -94,10 +94,7 @@ class GameControllerTest {
 	void suggestCharacter() throws Exception {
 		
 		final String header = "Test-Player";
-		Optional<PlayerSuggestion> response = Optional.of(new PlayerSuggestion(header, "Usop", "char"));
-		
-		when(gameService.suggestCharacter(eq("1234"), eq(header), any(CharacterSuggestion.class))).thenReturn(response);
-		
+
 		this.mockMvc.perform(
 						MockMvcRequestBuilders.post("/games/1234/characters")
 								.header("X-Player", header)
@@ -107,12 +104,7 @@ class GameControllerTest {
 										    "nickname": " Usop",
 										    "character": " char"
 										}"""))
-				.andExpect(status().isOk())
-				.andExpect(jsonPath("username").value(header))
-				.andExpect(jsonPath("nickname").value("Usop"))
-				.andExpect(jsonPath("suggestion").value("char"));
-
-		verify(gameService, times(1)).suggestCharacter(eq("1234"), eq("Test-Player"), any(CharacterSuggestion.class));
+				.andExpect(status().isOk());
 	}
 	
 	@Test
