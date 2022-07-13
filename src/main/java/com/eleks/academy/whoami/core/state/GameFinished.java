@@ -57,7 +57,7 @@ public final class GameFinished implements GameState {
 	}
 
 	@Override
-	public int getPlayersInGame() {
-		return this.playersInGame;
+	public String getPlayersInGame() {
+		return Integer.toString(this.maxPlayers);
 	}
 }
