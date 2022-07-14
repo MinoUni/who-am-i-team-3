@@ -6,7 +6,9 @@ public interface SynchronousPlayer {
 
 	String getId();
 
-	String getName();
+    void setName(String name);
+
+    String getName();
 
 	String getCharacterSuggestion();
 	

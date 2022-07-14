@@ -3,8 +3,11 @@ package com.eleks.academy.whoami.core.impl;
 import com.eleks.academy.whoami.core.SynchronousGame;
 import com.eleks.academy.whoami.core.SynchronousPlayer;
 import com.eleks.academy.whoami.core.exception.GameNotFoundException;
+import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
 import com.eleks.academy.whoami.core.state.GameState;
+import com.eleks.academy.whoami.core.state.SuggestingCharacters;
 import com.eleks.academy.whoami.core.state.WaitingForPlayers;
+import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
 
 import java.time.Instant;
@@ -78,7 +81,7 @@ public class PersistentGame implements SynchronousGame {
 
     @Override
     public List<PlayerWithState> getPlayersList() {
-        return applyIfPresent(this.gameState.peek(), GameState::getPlayersList)
+        return this.applyIfPresent(this.gameState.peek(), GameState::getPlayersList)
                 .collect(Collectors.toList());
     }
 
@@ -91,7 +94,9 @@ public class PersistentGame implements SynchronousGame {
     public SynchronousPlayer enrollToGame(String player) {
         if (isAvailable()) {
             var newPlayer = new PersistentPlayer(player);
+            assert gameState.peek() != null;
             ((WaitingForPlayers) gameState.peek()).add(newPlayer);
+            assert gameState.peek() != null;
             if (gameState.peek().getPlayersInGame().equals("4")) {
                 this.gameState.add(Objects.requireNonNull(this.gameState.poll()).next());
             }
@@ -100,16 +105,18 @@ public class PersistentGame implements SynchronousGame {
             throw new GameNotFoundException("Game [" + this.getId() + "] already at " + this.getStatus() + " state.");
     }
 
-    private String getToken() {
-        return String.format("Player %d", Double.valueOf(Math.random() * 999).intValue());
+    @Override
+    public void suggestCharacter(String player, CharacterSuggestion suggestion) {
+        if (findPlayer(player).isPresent()) {
+            assert gameState.peek() != null;
+            ((SuggestingCharacters)gameState.peek()).suggestCharacter(player, suggestion);
+            assert gameState.peek() != null;
+            if (gameState.peek().isReadyToNextState()) {
+                this.gameState.add(Objects.requireNonNull(this.gameState.poll()).next());
+            }
+        }
     }
 
-    /*
-     * TODO: refactor method
-     * @return {@code true} if player were removed or {@code false} if player not in game
-     * (?)@throws some custom gameException?
-     *
-     */
     @Override
     public Optional<SynchronousPlayer> leaveGame(String player) {
         return this.applyIfPresent(this.gameState.peek(), gameState -> gameState.leave(player));
@@ -117,7 +124,6 @@ public class PersistentGame implements SynchronousGame {
 
     @Override
     public SynchronousGame start() {
-//		this.currentState.peek().next();
         this.gameState.add(Objects.requireNonNull(this.gameState.poll()).next());
         return this;
     }
@@ -133,6 +139,10 @@ public class PersistentGame implements SynchronousGame {
 
     private <T, R> R applyIfPresent(T source, Function<T, R> mapper, R fallback) {
         return Optional.ofNullable(source).map(mapper).orElse(fallback);
+    }
+
+    private String getToken() {
+        return String.format("Player %d", Double.valueOf(Math.random() * 999).intValue());
     }
 
 }

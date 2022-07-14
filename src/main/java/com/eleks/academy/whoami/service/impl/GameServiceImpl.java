@@ -36,7 +36,9 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public List<GameLight> findAvailableGames(String player) {
-		return this.gameRepository.findAllAvailable(player).map(GameLight::of).toList();
+		return this.gameRepository.findAllAvailable(player)
+				.map(GameLight::of)
+				.toList();
 	}
 
 	@Override
@@ -75,22 +77,13 @@ public class GameServiceImpl implements GameService {
 				.map(GameDetails::of);
 	}
 
-	/*
-	 *TODO: check gameState 
-	 */
 	@Override
 	public void suggestCharacter(String id, String player, CharacterSuggestion suggestion) {
-
 		this.gameRepository.findById(id)
-				.filter(g -> !g.isAvailable() && g.getState() instanceof SuggestingCharacters)
-				.map(game -> game.findPlayer(player))
-				.ifPresentOrElse(p -> p.ifPresentOrElse(then -> then.suggest(suggestion), 
-											() -> {
-												throw new PlayerNotFoundException("SUGGESTINGCHARACTERS: [" + player + "] in game with id[" + id + "] not found.");
-											}
-										), 
+				.filter(game -> game.getState() instanceof SuggestingCharacters)
+				.ifPresentOrElse(game -> game.suggestCharacter(player, suggestion),
 						() -> {
-							throw new GameNotFoundException("SUGGESTINGCHARACTERS: Game with id[" + id + "] not found.");
+							throw new GameNotFoundException("SUGGESTING-CHARACTERS: Game with id[" + id + "] not found.");
 						}
 				);
 	}

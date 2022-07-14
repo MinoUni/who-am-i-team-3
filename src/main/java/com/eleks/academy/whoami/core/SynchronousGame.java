@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.eleks.academy.whoami.core.state.GameState;
+import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
 
 public interface SynchronousGame {
@@ -21,6 +22,8 @@ public interface SynchronousGame {
 	boolean isAvailable();
 
 	SynchronousGame start();
+
+	void suggestCharacter(String player, CharacterSuggestion suggestion);
 
 	Optional<SynchronousPlayer> leaveGame(String player);
 

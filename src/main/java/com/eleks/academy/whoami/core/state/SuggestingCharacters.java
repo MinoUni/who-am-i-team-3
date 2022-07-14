@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
+import com.eleks.academy.whoami.model.request.CharacterSuggestion;
+import com.eleks.academy.whoami.model.response.PlayerState;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,10 +34,13 @@ public final class SuggestingCharacters implements GameState {
 
     private final Map<String, List<GameCharacter>> suggestedCharacters;
 
+    private final Map<String, GameCharacter> suggestions;
+
     private final Map<String, String> playerCharacterMap;
 
     public SuggestingCharacters(Map<String, PlayerWithState> players) {
         this.players = new ConcurrentHashMap<>(players);
+        this.suggestions = new HashMap<>(this.players.size());
         this.suggestedCharacters = new HashMap<>(this.players.size());
         this.playerCharacterMap = new ConcurrentHashMap<>(this.players.size());
     }
@@ -49,10 +54,10 @@ public final class SuggestingCharacters implements GameState {
     @Override
     public GameState next() {
         return Optional.of(this)
-                .filter(SuggestingCharacters::isReadyToNextState)
+//                .filter(SuggestingCharacters::isReadyToNextState)
                 .map(SuggestingCharacters::assign)
                 .map(then -> new ProcessingQuestion(this.players))
-                .orElseThrow(() -> new GameException("Cannot start game " + suggestedCharacters.size()));
+                .orElseThrow(() -> new GameException("Failed in next()-> PQ."));
     }
 
     @Override
@@ -77,21 +82,21 @@ public final class SuggestingCharacters implements GameState {
 
     @Override
     public boolean isReadyToNextState() {
-        if (this.players
+        return this.players
                 .values()
                 .stream()
-                .map(PlayerWithState::getPlayer)
-                .filter(SynchronousPlayer::isSuggest)
-                .count() == this.players.size()) {
-
-            return true;
-        } else
-            throw new GameException("Game not ready to start");
+                .map(PlayerWithState::getState)
+                .filter(state -> state.equals(PlayerState.READY))
+                .count() == this.players.size();
     }
 
     @Override
     public Optional<SynchronousPlayer> findPlayer(String player) {
-        return Optional.ofNullable(this.players.get(player).getPlayer());
+        var result = Optional.ofNullable(this.players.get(player));
+        if (result.isEmpty()) {
+            throw new PlayerNotFoundException("SUGGESTING-CHARACTERS: [" + player + "] not found.");
+        }
+        return Optional.ofNullable(result.get().getPlayer());
     }
 
     @Override
@@ -99,6 +104,20 @@ public final class SuggestingCharacters implements GameState {
         if (findPlayer(player).isPresent()) {
             return Optional.of(this.players.remove(player).getPlayer());
         } else throw new PlayerNotFoundException("[" + player + "] not found.");
+    }
+
+    public void suggestCharacter(String player, CharacterSuggestion suggestion) {
+        if (this.players.get(player).getState().equals(PlayerState.NOT_READY)) {
+            var currentPlayer = this.players.get(player);
+
+            this.suggestions.put(player, GameCharacter.of(suggestion.getCharacter(), player));
+
+            currentPlayer.getPlayer().setName(suggestion.getName());
+            currentPlayer.setState(PlayerState.READY);
+        } else {
+            throw new GameException("[" + player + "] already submit his suggestion.");
+        }
+
     }
 
     private GameState assign() {

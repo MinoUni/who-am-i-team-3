@@ -21,10 +21,9 @@ public class PersistentPlayer implements SynchronousPlayer {
 	private String gameCharacter;
 	
 	private boolean isCharacterAssigned = Boolean.FALSE;
-	
+
 	public PersistentPlayer(String id) {
 		this.id = Objects.requireNonNull(id);
-//		this.name = Objects.requireNonNull(name);
 	}
 
 	@Override
@@ -46,7 +45,8 @@ public class PersistentPlayer implements SynchronousPlayer {
 		this.characterSuggestion = character;
 	}
 
-	private void setName(String name) {
+	@Override
+	public void setName(String name) {
 		this.name = name;
 	}
 
