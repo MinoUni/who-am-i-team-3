@@ -43,6 +43,11 @@ public class GameInMemoryRepository implements GameRepository {
 	}
 
 	@Override
+	public void disbandGame(String id) {
+		this.games.remove(id);
+	}
+
+	@Override
 	public SynchronousGame save(SynchronousGame game) {
 		this.games.put(game.getId(), game);
 

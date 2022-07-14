@@ -155,7 +155,13 @@ public class GameServiceImpl implements GameService {
 			if (game.isPresent()) {
 				
 				this.gameRepository.deletePlayerByHeader(player);
-				return Optional.of(LeaveModel.of(game.get().leaveGame(player).get(), id));
+				var plToLeave = game.get().leaveGame(player).get();
+
+				if (game.get().getPlayersInGame().equals("0")) {
+					this.gameRepository.disbandGame(id);
+				}
+
+				return Optional.of(LeaveModel.of(plToLeave, id));
 				
 			} else throw new GameNotFoundException("Game with id[" + id + "] not found.");
 			
