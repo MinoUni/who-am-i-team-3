@@ -2,15 +2,14 @@ package com.eleks.academy.whoami.core.state;
 
 import com.eleks.academy.whoami.core.SynchronousPlayer;
 import com.eleks.academy.whoami.core.exception.GameException;
-
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
-
+import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 // TODO: Implement makeTurn(...) and next() methods, pass a turn to next player
 public final class ProcessingQuestion implements GameState {
@@ -19,12 +18,8 @@ public final class ProcessingQuestion implements GameState {
 	
 	private final Map<String, PlayerWithState> players;
 	
-	private final Map<String, String> playerCharacterMap;
-	
 	public ProcessingQuestion(Map<String, PlayerWithState> players) {
 		this.players = players;
-		this.playerCharacterMap = new ConcurrentHashMap<>();
-		
 		this.currentPlayer = players.keySet()
 				.stream()
 				.findAny()
@@ -38,13 +33,13 @@ public final class ProcessingQuestion implements GameState {
 
 	@Override
 	public Optional<SynchronousPlayer> findPlayer(String player) {
-		return Optional.ofNullable(this.players.get(player).getPlayer());
+		var result = Optional.ofNullable(this.players.get(player));
+		if (result.isEmpty()) {
+			throw new PlayerNotFoundException("PROCESSING-QUESTION: [" + player + "] not found.");
+		}
+		return Optional.ofNullable(result.get().getPlayer());
 	}
-	
-	public Map<String, String> getMap() {
-		return this.playerCharacterMap;
-	}
-	
+
 	public String getCurrentTurn() {
 		return this.currentPlayer;
 	}
@@ -66,7 +61,9 @@ public final class ProcessingQuestion implements GameState {
 
 	@Override
 	public Optional<SynchronousPlayer> leave(String player) {
-		throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+		if (findPlayer(player).isPresent()) {
+			return Optional.of(this.players.remove(player).getPlayer());
+		} else throw new PlayerNotFoundException("[" + player + "] not found.");
 	}
 
 	@Override
