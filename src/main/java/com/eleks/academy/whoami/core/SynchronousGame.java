@@ -31,4 +31,5 @@ public interface SynchronousGame {
 
 	GameState getState();
 
+    String getCurrentTurn();
 }

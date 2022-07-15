@@ -3,8 +3,8 @@ package com.eleks.academy.whoami.core.impl;
 import com.eleks.academy.whoami.core.SynchronousGame;
 import com.eleks.academy.whoami.core.SynchronousPlayer;
 import com.eleks.academy.whoami.core.exception.GameNotFoundException;
-import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
 import com.eleks.academy.whoami.core.state.GameState;
+import com.eleks.academy.whoami.core.state.ProcessingQuestion;
 import com.eleks.academy.whoami.core.state.SuggestingCharacters;
 import com.eleks.academy.whoami.core.state.WaitingForPlayers;
 import com.eleks.academy.whoami.model.request.CharacterSuggestion;
@@ -67,6 +67,12 @@ public class PersistentGame implements SynchronousGame {
     @Override
     public GameState getState() {
         return this.applyIfPresent(this.gameState.peek(), GameState::getCurrentState);
+    }
+
+    @Override
+    public String getCurrentTurn() {
+        return this.gameState.peek() instanceof ProcessingQuestion ?
+                ((ProcessingQuestion)this.gameState.peek()).getCurrentTurn() : null;
     }
 
     @Override
