@@ -1,32 +1,21 @@
 package com.eleks.academy.whoami.core.state;
 
-import static java.util.stream.Collectors.toList;
+import com.eleks.academy.whoami.core.SynchronousPlayer;
+import com.eleks.academy.whoami.core.exception.GameException;
+import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
+import com.eleks.academy.whoami.core.impl.GameCharacter;
+import com.eleks.academy.whoami.model.request.CharacterSuggestion;
+import com.eleks.academy.whoami.model.response.PlayerState;
+import com.eleks.academy.whoami.model.response.PlayerWithState;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
-import com.eleks.academy.whoami.model.request.CharacterSuggestion;
-import com.eleks.academy.whoami.model.response.PlayerState;
-import com.eleks.academy.whoami.model.response.PlayerWithState;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.eleks.academy.whoami.core.SynchronousPlayer;
-import com.eleks.academy.whoami.core.exception.GameException;
-import com.eleks.academy.whoami.core.impl.GameCharacter;
+import static java.util.stream.Collectors.toList;
 
 public final class SuggestingCharacters implements GameState {
 
@@ -54,7 +43,6 @@ public final class SuggestingCharacters implements GameState {
     @Override
     public GameState next() {
         return Optional.of(this)
-//                .filter(SuggestingCharacters::isReadyToNextState)
                 .map(SuggestingCharacters::assign)
                 .map(then -> new ProcessingQuestion(this.players))
                 .orElseThrow(() -> new GameException("Failed in next()-> PQ."));
@@ -122,23 +110,10 @@ public final class SuggestingCharacters implements GameState {
 
     private GameState assign() {
 
-        final var authors = this.players.keySet().stream().toList();
-
-        int i = 0;
-        while (i < 3) {
-            this.players.get(authors.get(i))
-                    .getPlayer()
-                    .setGameCharacter(this.players.get(authors.get(i + 1))
-                            .getPlayer()
-                            .getCharacterSuggestion());
-            i++;
+        for (PlayerWithState player : this.players.values()) {
+            var character = findNonTakenCharacter(player.getPlayer());
+            player.getPlayer().setCharacter(character.getCharacter());
         }
-
-        this.players.get(authors.get(3))
-                .getPlayer()
-                .setGameCharacter(this.players.get(authors.get(0))
-                        .getPlayer()
-                        .getCharacterSuggestion());
 
         if (!isAllPlayersAssigned()) {
             throw new GameException("isAllPlayersAssigned = FALSE");
@@ -146,27 +121,36 @@ public final class SuggestingCharacters implements GameState {
         return this;
     }
 
+    private GameCharacter findNonTakenCharacter(SynchronousPlayer player) {
+        var character = this.suggestions.values()
+                .stream()
+                .filter(c -> !c.isTaken() && !c.getAuthor().equals(player.getId()))
+                .findAny();
+        character.ifPresent(gameCharacter -> this.suggestions.get(gameCharacter.getAuthor()).markTaken());
+        return character.orElse(null);
+    }
+
     private boolean isAllPlayersAssigned() {
         return this.players
                 .values()
                 .stream()
                 .map(PlayerWithState::getPlayer)
-                .filter(SynchronousPlayer::isCharacterAssigned)
+                .map(player -> player.getCharacter() != null)
                 .count() == this.players.size();
     }
 
     private void suggestCharacter(SynchronousPlayer player) {
-        List<GameCharacter> characters = this.suggestedCharacters.get(player.getName());
+        List<GameCharacter> characters = this.suggestedCharacters.get(player.getId());
 
         if (Objects.isNull(characters)) {
             final var newCharacters = new ArrayList<GameCharacter>();
 
-            this.suggestedCharacters.put(player.getName(), newCharacters);
+            this.suggestedCharacters.put(player.getId(), newCharacters);
 
             characters = newCharacters;
         }
 
-        characters.add(GameCharacter.of(player.getCharacterSuggestion(), player.getName()));
+        characters.add(GameCharacter.of(player.getCharacter(), player.getId()));
 
     }
 
@@ -214,7 +198,7 @@ public final class SuggestingCharacters implements GameState {
 
                     character.markTaken();
 
-                    this.players.get(player).getPlayer().setGameCharacter(character.getCharacter());
+                    this.players.get(player).getPlayer().setCharacter(character.getCharacter());
 
                     this.playerCharacterMap.put(player, character.getCharacter());
 
