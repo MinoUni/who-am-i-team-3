@@ -103,7 +103,10 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public Optional<TurnDetails> findTurnInfo(String id, String player) {
-		throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+		var game = this.gameRepository.findById(id);
+		if (game.isPresent()) {
+			return Optional.ofNullable(game.get().findTurnInfo(player));
+		} else throw new GameNotFoundException("PROCESSING-QUESTION: Game with id[" + id + "] not found.");
 	}
 
 	@Override
