@@ -32,11 +32,11 @@ public final class ProcessingQuestion implements GameState {
                 .findFirst()
                 .orElse(null);
 
-        this.players.forEach((k, v) -> {
-            if (k.equals(currentPlayer)) {
-                v.setState(PlayerState.ASKING);
-            } else v.setState(PlayerState.ANSWERING);
-        });
+//        this.players.forEach((k, v) -> {
+//            if (k.equals(currentPlayer)) {
+//                v.setState(PlayerState.ASKING);
+//            } else v.setState(PlayerState.ANSWERING);
+//        });
     }
 
     @Override
