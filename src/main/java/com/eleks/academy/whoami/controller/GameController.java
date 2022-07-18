@@ -83,8 +83,8 @@ public class GameController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
+//    @PostMapping("/{id}")
+//    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GameDetails> startGame(@PathVariable("id") String id,
                                                  @RequestHeader(PLAYER) String player) {
 
