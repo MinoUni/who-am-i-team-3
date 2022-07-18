@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.eleks.academy.whoami.core.state.ProcessingQuestion;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -97,8 +98,14 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public void askQuestion(String gameId, String player, String message) {
-		throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+	public void askQuestion(String id, String player, String message) {
+		this.gameRepository.findById(id)
+				.filter(game -> game.getState() instanceof ProcessingQuestion)
+				.ifPresentOrElse(game -> game.askQuestion(player, message),
+						() -> {
+							throw new GameNotFoundException("PROCESSING-QUESTION: Game with id[" + id + "] not found.");
+						}
+				);
 	}
 
 	@Override
@@ -111,12 +118,24 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public void submitGuess(String id, String player, String guess) {
-		throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+		this.gameRepository.findById(id)
+				.filter(game -> game.getState() instanceof ProcessingQuestion)
+				.ifPresentOrElse(game -> game.submitGuess(player, guess),
+						() -> {
+							throw new GameNotFoundException("PROCESSING-QUESTION: Game with id[" + id + "] not found.");
+						}
+				);
 	}
 
 	@Override
 	public void answerQuestion(String id, String player, String answer) {
-		throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+		this.gameRepository.findById(id)
+				.filter(game -> game.getState() instanceof ProcessingQuestion)
+				.ifPresentOrElse(game -> game.answerQuestion(player, answer),
+						() -> {
+							throw new GameNotFoundException("PROCESSING-QUESTION: Game with id[" + id + "] not found.");
+						}
+				);
 	}
 
 	@Override

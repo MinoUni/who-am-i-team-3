@@ -25,15 +25,13 @@ public final class ProcessingQuestion implements GameState {
 
     private final Map<String, PlayerWithState> players;
 
-    private final Queue<PlayerWithState> playersQueue = new LinkedBlockingQueue<>();
-
     public ProcessingQuestion(Map<String, PlayerWithState> players) {
         this.players = players;
         this.currentPlayer = players.keySet()
                 .stream()
                 .findFirst()
                 .orElse(null);
-        this.playersQueue.addAll(this.players.values());
+
         this.players.forEach((k, v) -> {
             if (k.equals(currentPlayer)) {
                 v.setState(PlayerState.ASKING);
