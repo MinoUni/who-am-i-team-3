@@ -29,11 +29,10 @@ public final class ProcessingQuestion implements GameState {
 
     public ProcessingQuestion(Map<String, PlayerWithState> players) {
         this.players = players;
-//        this.currentPlayer = players.keySet()
-//                .stream()
-//                .findAny()
-//                .orElse(null);
-        this.currentPlayer = players.get("Rose").getPlayer().getId();
+        this.currentPlayer = players.keySet()
+                .stream()
+                .findFirst()
+                .orElse(null);
         this.playersQueue.addAll(this.players.values());
         this.players.forEach((k, v) -> {
             if (k.equals(currentPlayer)) {
