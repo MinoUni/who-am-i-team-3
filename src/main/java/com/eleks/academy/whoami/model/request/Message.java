@@ -5,13 +5,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
 
-	@NotBlank
+	@NotBlank(message = "Message can't be blank.")
+	@Size(min = 2, max = 50, message = "Message must be between 2 and 50 characters long.")
+//	@Pattern(message = "Message contains special symbols.", regexp = "[a-zA-Z\\d]+\\s?")
 	private String message;
 
 }
