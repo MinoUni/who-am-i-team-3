@@ -33,12 +33,12 @@ public final class ProcessingQuestion implements GameState {
 //                .stream()
 //                .findAny()
 //                .orElse(null);
-        this.currentPlayer = players.get(3).getPlayer().getId();
+        this.currentPlayer = players.get("Rose").getPlayer().getId();
         this.playersQueue.addAll(this.players.values());
-        this.playersQueue.forEach(player -> {
-            if (player.getPlayer().getId().equals(currentPlayer)) {
-                player.setState(PlayerState.ASKING);
-            } else player.setState(PlayerState.ANSWERING);
+        this.players.forEach((k, v) -> {
+            if (k.equals(currentPlayer)) {
+                v.setState(PlayerState.ASKING);
+            } else v.setState(PlayerState.ANSWERING);
         });
     }
 
