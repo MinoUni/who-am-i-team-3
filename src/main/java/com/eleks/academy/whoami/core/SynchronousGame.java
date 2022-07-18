@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.eleks.academy.whoami.core.state.GameState;
 import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
+import com.eleks.academy.whoami.model.response.TurnDetails;
 
 public interface SynchronousGame {
 
@@ -32,4 +33,12 @@ public interface SynchronousGame {
 	GameState getState();
 
     String getCurrentTurn();
+
+    void askQuestion(String player, String message);
+
+	void answerQuestion(String player, String answer);
+
+	TurnDetails findTurnInfo(String player);
+
+    void submitGuess(String player, String guess);
 }

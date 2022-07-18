@@ -9,6 +9,7 @@ import com.eleks.academy.whoami.core.state.SuggestingCharacters;
 import com.eleks.academy.whoami.core.state.WaitingForPlayers;
 import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
+import com.eleks.academy.whoami.model.response.TurnDetails;
 
 import java.time.Instant;
 import java.util.List;
@@ -72,7 +73,40 @@ public class PersistentGame implements SynchronousGame {
     @Override
     public String getCurrentTurn() {
         return this.gameState.peek() instanceof ProcessingQuestion ?
-                ((ProcessingQuestion)this.gameState.peek()).getCurrentTurn() : null;
+                ((ProcessingQuestion) this.gameState.peek()).getCurrentTurn() : null;
+    }
+
+    @Override
+    public void askQuestion(String player, String message) {
+        if (findPlayer(player).isPresent()) {
+            assert this.gameState.peek() != null;
+            ((ProcessingQuestion) this.gameState.peek()).askQuestion(player, message);
+        }
+    }
+
+    @Override
+    public void submitGuess(String player, String guess) {
+        if (findPlayer(player).isPresent()) {
+            assert this.gameState.peek() != null;
+            ((ProcessingQuestion) this.gameState.peek()).submitGuess(player, guess);
+        }
+    }
+
+    @Override
+    public void answerQuestion(String player, String answer) {
+        if (findPlayer(player).isPresent()) {
+            assert this.gameState.peek() != null;
+            ((ProcessingQuestion) this.gameState.peek()).answerQuestion(player, answer);
+        }
+    }
+
+    @Override
+    public TurnDetails findTurnInfo(String player) {
+        if (findPlayer(player).isPresent()) {
+            assert this.gameState.peek() != null;
+           return ((ProcessingQuestion) this.gameState.peek()).getTurnInfo();
+        } else
+            throw new GameNotFoundException("Game [" + this.getId() + "] not found [" + player + "].");
     }
 
     @Override
@@ -115,7 +149,7 @@ public class PersistentGame implements SynchronousGame {
     public void suggestCharacter(String player, CharacterSuggestion suggestion) {
         if (findPlayer(player).isPresent()) {
             assert gameState.peek() != null;
-            ((SuggestingCharacters)gameState.peek()).suggestCharacter(player, suggestion);
+            ((SuggestingCharacters) gameState.peek()).suggestCharacter(player, suggestion);
             assert gameState.peek() != null;
             if (gameState.peek().isReadyToNextState()) {
                 this.gameState.add(Objects.requireNonNull(this.gameState.poll()).next());
