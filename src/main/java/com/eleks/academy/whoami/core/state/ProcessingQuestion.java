@@ -8,12 +8,10 @@ import com.eleks.academy.whoami.model.response.PlayerWithState;
 import com.eleks.academy.whoami.model.response.TurnDetails;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class ProcessingQuestion implements GameState {
@@ -25,29 +23,31 @@ public final class ProcessingQuestion implements GameState {
 
     private final Map<String, PlayerWithState> players;
 
+    private List<String> answers = new ArrayList<>();
+
     public ProcessingQuestion(Map<String, PlayerWithState> players) {
         this.players = players;
         this.currentPlayer = players.keySet()
                 .stream()
                 .findFirst()
                 .orElse(null);
-
-//        this.players.forEach((k, v) -> {
-//            if (k.equals(currentPlayer)) {
-//                v.setState(PlayerState.ASKING);
-//            } else v.setState(PlayerState.ANSWERING);
-//        });
+        this.players.forEach((k, v) -> {
+            if (k.equals(currentPlayer)) {
+                v.setState(PlayerState.ASKING);
+            } else v.setState(PlayerState.ANSWERING);
+        });
     }
 
     @Override
     public GameState next() {
         throw new GameException("Not implemented");
     }
-    //TODO: Implement cycle of Q-A
 
     public void gameCycle(String player, String message) {
 
-        if (player.equals(currentPlayer)) {
+        if (player.equals(currentPlayer) &&
+                players.get(player).getState().equals(PlayerState.ASKING)) {
+
             askQuestion(player, message);
         } else {
             answerQuestion(player, message);
@@ -64,7 +64,12 @@ public final class ProcessingQuestion implements GameState {
     }
 
     public void answerQuestion(String player, String answer) {
+        if (players.containsKey(player) &&
+                players.get(player).getState().equals(PlayerState.ANSWERING)) {
 
+            answers.add(answer.toLowerCase());
+            players.get(player).setState(null);
+        }
     }
 
     public TurnDetails getTurnInfo() {
