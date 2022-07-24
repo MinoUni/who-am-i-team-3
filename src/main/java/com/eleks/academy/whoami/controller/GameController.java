@@ -1,14 +1,12 @@
 package com.eleks.academy.whoami.controller;
 
 import com.eleks.academy.whoami.core.SynchronousPlayer;
-import com.eleks.academy.whoami.model.request.CharacterSuggestion;
-import com.eleks.academy.whoami.model.request.Message;
-import com.eleks.academy.whoami.model.request.NewGameRequest;
+import com.eleks.academy.whoami.model.request.*;
+import com.eleks.academy.whoami.model.response.GameHistory;
 import com.eleks.academy.whoami.model.response.AllFields;
 import com.eleks.academy.whoami.model.response.GameDetails;
 import com.eleks.academy.whoami.model.response.GameLight;
 import com.eleks.academy.whoami.model.response.LeaveModel;
-import com.eleks.academy.whoami.model.response.QuickGame;
 import com.eleks.academy.whoami.model.response.TurnDetails;
 import com.eleks.academy.whoami.service.GameService;
 import lombok.RequiredArgsConstructor;
@@ -83,42 +81,43 @@ public class GameController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-//    @PostMapping("/{id}")
-//    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<GameDetails> startGame(@PathVariable("id") String id,
-                                                 @RequestHeader(PLAYER) String player) {
-
-        return this.gameService.startGame(id, player)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/{id}/questions")
+    @PostMapping("/{id}/question")
     public void askQuestion(@PathVariable("id") String id,
-                            @RequestHeader(PLAYER) String player, @RequestBody Message message) {
+                            @RequestHeader(PLAYER) String player,
+                            @RequestBody Message message) {
 
         this.gameService.askQuestion(id, player, message.getMessage());
     }
 
+    @PostMapping("/{id}/question/answer")
+    public void answerQuestion(@PathVariable("id") String id,
+                               @RequestHeader(PLAYER) String player,
+                               @RequestParam QuestionAnswer answer) {
+
+        this.gameService.answerQuestion(id, player, answer);
+
+    }
+
     @PostMapping("/{id}/guess")
     public void submitGuess(@PathVariable("id") String id,
-                            @RequestHeader(PLAYER) String player, @RequestBody Message message) {
+                            @RequestHeader(PLAYER) String player,
+                            @RequestBody Message message) {
 
         this.gameService.submitGuess(id, player, message.getMessage());
     }
 
-    @PostMapping("/{id}/answer")
-    public void answerQuestion(@PathVariable("id") String id,
-                               @RequestHeader(PLAYER) String player, @RequestBody Message message) {
+    @PostMapping("/{id}/guess/answer")
+    public void answerGuess(@PathVariable("id") String id,
+                            @RequestHeader(PLAYER) String player,
+                            @RequestParam GuessAnswer answer) {
 
-        this.gameService.answerQuestion(id, player, message.getMessage());
+        this.gameService.answerGuess(id, player, answer);
 
     }
 
-//    @PostMapping("/quick")
-    public ResponseEntity<QuickGame> findQuickGame(@RequestHeader(PLAYER) String player) {
-
-        return this.gameService.findQuickGame(player)
+    @GetMapping("/{id}/history")
+    public ResponseEntity<GameHistory> getGameHistory(@PathVariable("id") String id) {
+        return this.gameService.findGameHistory(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -135,5 +134,15 @@ public class GameController {
     @GetMapping("/all-players-count")
     public Integer getAllPlayersCount(@RequestHeader(PLAYER) String player) {
         return this.gameService.getAllPlayersCount();
+    }
+
+    @PostMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<GameDetails> startGame(@PathVariable("id") String id,
+                                                 @RequestHeader(PLAYER) String player) {
+
+        return this.gameService.startGame(id, player)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
