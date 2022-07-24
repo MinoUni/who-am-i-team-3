@@ -19,8 +19,6 @@ private String id;
 	
 	private String status;
 	
-	private boolean accessibility;
-	
 	private String playersInGame;
 	
 	private List<PlayerWithState> players;
@@ -28,9 +26,8 @@ private String id;
 	public static AllFields of(SynchronousGame game) {
 		return AllFields.builder()
 				.id(game.getId())
-				.status(game.getStatus())
-				.accessibility(game.isAvailable())
-				.playersInGame(game.getPlayersInGame())
+				.status(game.getState().getClass().getName())
+				.playersInGame(String.valueOf(game.getPlayersList().size()))
 				.players(game.getPlayersList())
 				.build();
 	}

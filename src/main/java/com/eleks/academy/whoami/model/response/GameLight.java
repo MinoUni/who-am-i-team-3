@@ -21,8 +21,8 @@ public class GameLight {
 	public static GameLight of(SynchronousGame game) {
 		return GameLight.builder()
 				.id(game.getId())
-				.status(game.getStatus())
-				.playersInGame(game.getPlayersInGame())
+				.status(game.getState().getClass().getName())
+				.playersInGame(String.valueOf(game.getPlayersList().size()))
 				.build();
 	}
 
