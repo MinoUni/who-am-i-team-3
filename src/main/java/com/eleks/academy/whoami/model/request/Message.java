@@ -14,8 +14,7 @@ import javax.validation.constraints.Size;
 public class Message {
 
 	@NotBlank(message = "Message can't be blank.")
-	@Size(min = 2, max = 50, message = "Message must be between 2 and 50 characters long.")
-//	@Pattern(message = "Message contains special symbols.", regexp = "[a-zA-Z\\d]+\\s?")
+	@Size(min = 2, max = 256, message = "Message must be between 2 and 256 characters long.")
 	private String message;
 
 }
