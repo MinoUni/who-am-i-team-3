@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.eleks.academy.whoami.core.state.impl.WaitingForPlayers;
 import org.springframework.stereotype.Repository;
 
 import com.eleks.academy.whoami.core.SynchronousGame;
@@ -22,10 +23,7 @@ public class GameInMemoryRepository implements GameRepository {
 	
 	@Override
 	public Stream<SynchronousGame> findAllAvailable(String player) {
-		Predicate<SynchronousGame> freeToJoin = SynchronousGame::isAvailable;
-
-//		Predicate<SynchronousGame> playersGame = game ->
-//				game.findPlayer(player).isPresent();
+		Predicate<SynchronousGame> freeToJoin = game -> game.getState() instanceof WaitingForPlayers;
 
 		return this.games.values()
 				.stream()
@@ -76,10 +74,10 @@ public class GameInMemoryRepository implements GameRepository {
 	
 	@Override
 	public Map<String, SynchronousGame> findAvailableQuickGames() {
-		return filterByValue(games, SynchronousGame::isAvailable);
+		return filterByValue(games, game -> game.getState() instanceof WaitingForPlayers);
 	}
 	
-	private static <K, V> Map<K, V> filterByValue(Map<K, V> map, Predicate<V> predicate) {
+	private <K, V> Map<K, V> filterByValue(Map<K, V> map, Predicate<V> predicate) {
 	    return map.entrySet()
 	            .stream()
 	            .filter(entry -> predicate.test(entry.getValue()))
