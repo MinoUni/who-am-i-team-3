@@ -15,12 +15,12 @@ public class CharacterSuggestion {
 
 	@NotBlank(message = "Name may not be blank")
 	@Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters long")
-	@Pattern(message = "Message contains special symbols.", regexp = "[a-zA-Z\\d]+\\s?")
+	@Pattern(message = "Name contains special symbols.", regexp = "^\\w+\\s{0,5}\\w*$")
 	private String name;
 
 	@NotBlank(message = "Character may not be blank")
 	@Size(min = 2, max = 50, message = "Character must be between 2 and 50 characters long")
-	@Pattern(message = "Message contains special symbols.", regexp = "[a-zA-Z\\d]+\\s?")
+	@Pattern(message = "Character contains special symbols.", regexp = "^\\w+\\s{0,5}\\w*$")
 	private String character;
 	
 }
