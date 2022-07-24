@@ -18,13 +18,6 @@ public interface GameState {
 	/**
 	 * Used for presentation purposes only
 	 *
-	 * @return the status of the current state to show to players
-	 */
-	String getStatus();
-	
-	/**
-	 * Used for presentation purposes only
-	 *
 	 * @return {@code true} if meet all requirements to start a game
 	 * or {@code false} if not
 	 * 
@@ -46,14 +39,7 @@ public interface GameState {
 	 * @return values of players map
 	 */
 	Stream<PlayerWithState> getPlayersList();
-	
-	/**
-	 * Used for presentation purposes only
-	 *
-	 * @return the count of the players currently in game
-	 */
-	String getPlayersInGame();
-	
+
 	/* @return player
 	 * @throw ResponseStatusException(404) -> PlayerNotFoundException
 	 */

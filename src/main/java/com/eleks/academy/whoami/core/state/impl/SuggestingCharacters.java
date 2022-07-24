@@ -1,9 +1,10 @@
-package com.eleks.academy.whoami.core.state;
+package com.eleks.academy.whoami.core.state.impl;
 
 import com.eleks.academy.whoami.core.SynchronousPlayer;
 import com.eleks.academy.whoami.core.exception.GameException;
 import com.eleks.academy.whoami.core.exception.PlayerNotFoundException;
 import com.eleks.academy.whoami.core.impl.GameCharacter;
+import com.eleks.academy.whoami.core.state.GameState;
 import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 import com.eleks.academy.whoami.model.response.PlayerState;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
@@ -54,18 +55,8 @@ public final class SuggestingCharacters implements GameState {
     }
 
     @Override
-    public String getStatus() {
-        return this.getClass().getName();
-    }
-
-    @Override
     public Stream<PlayerWithState> getPlayersList() {
         return this.players.values().stream();
-    }
-
-    @Override
-    public String getPlayersInGame() {
-        return Integer.toString(this.players.size());
     }
 
     @Override

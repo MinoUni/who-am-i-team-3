@@ -1,6 +1,7 @@
-package com.eleks.academy.whoami.core.state;
+package com.eleks.academy.whoami.core.state.impl;
 
 import com.eleks.academy.whoami.core.SynchronousPlayer;
+import com.eleks.academy.whoami.core.state.GameState;
 import com.eleks.academy.whoami.model.response.PlayerWithState;
 
 import java.util.Optional;
@@ -34,11 +35,6 @@ public final class GameFinished implements GameState {
 	}
 
 	@Override
-	public String getStatus() {
-		return null;
-	}
-
-	@Override
 	public boolean isReadyToNextState() {
 		// TODO Auto-generated method stub
 		return false;
@@ -56,8 +52,4 @@ public final class GameFinished implements GameState {
 		return null;
 	}
 
-	@Override
-	public String getPlayersInGame() {
-		return Integer.toString(this.maxPlayers);
-	}
 }
