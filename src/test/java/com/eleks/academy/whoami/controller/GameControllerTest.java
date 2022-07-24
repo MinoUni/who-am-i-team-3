@@ -1,9 +1,9 @@
 package com.eleks.academy.whoami.controller;
 
 import com.eleks.academy.whoami.configuration.GameControllerAdvice;
-import com.eleks.academy.whoami.model.request.NewGameRequest;
+import com.eleks.academy.whoami.model.request.NewGameSize;
 import com.eleks.academy.whoami.model.response.GameDetails;
-import com.eleks.academy.whoami.model.response.LeaveModel;
+import com.eleks.academy.whoami.model.response.LeaveDetails;
 import com.eleks.academy.whoami.service.impl.GameServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class GameControllerTest {
 
 	private final GameServiceImpl gameService = mock(GameServiceImpl.class);
 	private final GameController gameController = new GameController(gameService);
-	private final NewGameRequest gameRequest = new NewGameRequest();
+	private final NewGameSize gameRequest = new NewGameSize();
 	private MockMvc mockMvc;
 
 	@BeforeEach
@@ -51,7 +51,7 @@ class GameControllerTest {
 		GameDetails gameDetails = new GameDetails();
 		gameDetails.setId("12613126");
 		gameDetails.setStatus("WaitingForPlayers");
-		when(gameService.createGame(eq("player"), any(NewGameRequest.class))).thenReturn(Optional.of(gameDetails));
+		when(gameService.createGame(eq("player"), any(NewGameSize.class))).thenReturn(Optional.of(gameDetails));
 		this.mockMvc.perform(
 						MockMvcRequestBuilders.post("/games")
 								.header("X-Player", "player")
@@ -101,7 +101,7 @@ class GameControllerTest {
 	void leaveGameTest() throws Exception {
 		final String id = "686863";
 		
-		Optional<LeaveModel> response = Optional.of(new LeaveModel("Test-Player", id));
+		Optional<LeaveDetails> response = Optional.of(new LeaveDetails("Test-Player", id));
 		
 		when(gameService.leaveGame(id, "Test-Player")).thenReturn(response);
 		

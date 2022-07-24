@@ -3,7 +3,7 @@ package com.eleks.academy.whoami.service;
 import com.eleks.academy.whoami.core.SynchronousPlayer;
 import com.eleks.academy.whoami.model.request.CharacterSuggestion;
 import com.eleks.academy.whoami.model.request.GuessAnswer;
-import com.eleks.academy.whoami.model.request.NewGameRequest;
+import com.eleks.academy.whoami.model.request.NewGameSize;
 import com.eleks.academy.whoami.model.request.QuestionAnswer;
 import com.eleks.academy.whoami.model.response.*;
 
@@ -14,7 +14,7 @@ public interface GameService {
 
 	Integer getAllPlayersCount();
 
-	List<GameLight> findAvailableGames(String player);
+	List<GameShortInfo> findAvailableGames(String player);
 
 	Optional<GameDetails> findByIdAndPlayer(String id, String player);
 
@@ -24,11 +24,11 @@ public interface GameService {
 
 	Optional<GameHistory> findGameHistory(String id);
 
-	Optional<GameDetails> createGame(String player, NewGameRequest gameRequest);
+	Optional<GameDetails> createGame(String player, NewGameSize gameRequest);
 
 	SynchronousPlayer enrollToGame(String id, String player);
 
-	Optional<LeaveModel> leaveGame(String id, String player);
+	Optional<LeaveDetails> leaveGame(String id, String player);
 
 	void suggestCharacter(String id, String player, CharacterSuggestion suggestion);
 

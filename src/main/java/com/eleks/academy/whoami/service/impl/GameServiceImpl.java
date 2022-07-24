@@ -13,7 +13,7 @@ import com.eleks.academy.whoami.core.impl.PersistentGame;
 import com.eleks.academy.whoami.core.state.impl.ProcessingQuestion;
 import com.eleks.academy.whoami.core.state.impl.SuggestingCharacters;
 import com.eleks.academy.whoami.model.request.CharacterSuggestion;
-import com.eleks.academy.whoami.model.request.NewGameRequest;
+import com.eleks.academy.whoami.model.request.NewGameSize;
 import com.eleks.academy.whoami.model.response.*;
 import com.eleks.academy.whoami.repository.GameRepository;
 import com.eleks.academy.whoami.service.GameService;
@@ -36,9 +36,9 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public List<GameLight> findAvailableGames(String player) {
+	public List<GameShortInfo> findAvailableGames(String player) {
 		return this.gameRepository.findAllAvailable(player)
-				.map(GameLight::of)
+				.map(GameShortInfo::of)
 				.toList();
 	}
 
@@ -71,7 +71,7 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public Optional<GameDetails> createGame(String player, NewGameRequest gameRequest) {
+	public Optional<GameDetails> createGame(String player, NewGameSize gameRequest) {
 
 		Map<String, SynchronousGame> games = gameRepository.findAvailableQuickGames();
 
@@ -99,7 +99,7 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public Optional<LeaveModel> leaveGame(String id, String player) {
+	public Optional<LeaveDetails> leaveGame(String id, String player) {
 
 		if (this.gameRepository.findPlayerByHeader(player).isPresent()) {
 
@@ -114,7 +114,7 @@ public class GameServiceImpl implements GameService {
 					this.gameRepository.disbandGame(id);
 				}
 
-				return Optional.of(LeaveModel.of(plToLeave, id));
+				return Optional.of(LeaveDetails.of(plToLeave, id));
 
 			} else throw new GameNotFoundException("Game with id[" + id + "] not found.");
 

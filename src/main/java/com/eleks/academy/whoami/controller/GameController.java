@@ -5,8 +5,8 @@ import com.eleks.academy.whoami.model.request.*;
 import com.eleks.academy.whoami.model.response.GameHistory;
 import com.eleks.academy.whoami.model.response.AllFields;
 import com.eleks.academy.whoami.model.response.GameDetails;
-import com.eleks.academy.whoami.model.response.GameLight;
-import com.eleks.academy.whoami.model.response.LeaveModel;
+import com.eleks.academy.whoami.model.response.GameShortInfo;
+import com.eleks.academy.whoami.model.response.LeaveDetails;
 import com.eleks.academy.whoami.model.response.TurnDetails;
 import com.eleks.academy.whoami.service.GameService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class GameController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<GameLight> findAvailableGames(@RequestHeader(PLAYER) String player) {
+    public List<GameShortInfo> findAvailableGames(@RequestHeader(PLAYER) String player) {
         return this.gameService.findAvailableGames(player);
     }
 
@@ -40,7 +40,7 @@ public class GameController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<GameDetails> createGame(@RequestHeader(PLAYER) String player,
-                                                  @Valid @RequestBody NewGameRequest gameRequest) {
+                                                  @Valid @RequestBody NewGameSize gameRequest) {
 
         return this.gameService.createGame(player, gameRequest)
                 .map(ResponseEntity::ok)
@@ -123,8 +123,8 @@ public class GameController {
     }
 
     @DeleteMapping("/{id}/leave")
-    public ResponseEntity<LeaveModel> leaveGame(@PathVariable("id") String id,
-                                                @RequestHeader(PLAYER) String player) {
+    public ResponseEntity<LeaveDetails> leaveGame(@PathVariable("id") String id,
+                                                  @RequestHeader(PLAYER) String player) {
 
         return this.gameService.leaveGame(id, player)
                 .map(ResponseEntity::ok)

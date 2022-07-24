@@ -2,9 +2,9 @@ package com.eleks.academy.whoami.service.impl;
 
 import com.eleks.academy.whoami.core.SynchronousGame;
 import com.eleks.academy.whoami.core.impl.PersistentGame;
-import com.eleks.academy.whoami.model.request.NewGameRequest;
+import com.eleks.academy.whoami.model.request.NewGameSize;
 import com.eleks.academy.whoami.model.response.GameDetails;
-import com.eleks.academy.whoami.model.response.GameLight;
+import com.eleks.academy.whoami.model.response.GameShortInfo;
 import com.eleks.academy.whoami.repository.impl.GameInMemoryRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ class GameServiceImplTest {
 
 	private final GameInMemoryRepository mockGameRepository = mock(GameInMemoryRepository.class);	
 	private final GameServiceImpl gameService = new GameServiceImpl(mockGameRepository);
-	private final NewGameRequest gameRequest = new NewGameRequest();
+	private final NewGameSize gameRequest = new NewGameSize();
 
 	@BeforeEach
 	void setup() {
@@ -41,7 +41,7 @@ class GameServiceImplTest {
 
 		when(mockGameRepository.findAllAvailable(player)).thenReturn(games);
 
-		List<GameLight> listOfGames = gameService.findAvailableGames(player);
+		List<GameShortInfo> listOfGames = gameService.findAvailableGames(player);
 
 		assertThat(listOfGames).isNotNull();
 		assertThat(listOfGames).isEmpty();

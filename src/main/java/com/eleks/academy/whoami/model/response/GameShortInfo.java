@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GameLight {
+public class GameShortInfo {
 
 	private String id;
 
@@ -18,8 +18,8 @@ public class GameLight {
 	
 	private String playersInGame;
 
-	public static GameLight of(SynchronousGame game) {
-		return GameLight.builder()
+	public static GameShortInfo of(SynchronousGame game) {
+		return GameShortInfo.builder()
 				.id(game.getId())
 				.status(game.getState().getClass().getName())
 				.playersInGame(String.valueOf(game.getPlayersList().size()))
