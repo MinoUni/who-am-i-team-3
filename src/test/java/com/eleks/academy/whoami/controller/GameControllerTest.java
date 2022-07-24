@@ -1,18 +1,10 @@
 package com.eleks.academy.whoami.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Optional;
-
+import com.eleks.academy.whoami.configuration.GameControllerAdvice;
+import com.eleks.academy.whoami.model.request.NewGameRequest;
+import com.eleks.academy.whoami.model.response.GameDetails;
+import com.eleks.academy.whoami.model.response.LeaveModel;
+import com.eleks.academy.whoami.service.impl.GameServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,12 +15,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.eleks.academy.whoami.configuration.GameControllerAdvice;
-import com.eleks.academy.whoami.model.request.NewGameRequest;
-import com.eleks.academy.whoami.model.response.GameDetails;
-import com.eleks.academy.whoami.model.response.LeaveModel;
-import com.eleks.academy.whoami.model.response.QuickGame;
-import com.eleks.academy.whoami.service.impl.GameServiceImpl;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class GameControllerTest {
@@ -103,44 +95,6 @@ class GameControllerTest {
 										    "character": " char"
 										}"""))
 				.andExpect(status().isOk());
-	}
-	
-	@Test
-	void findQuickGameSuccessful() throws Exception {
-		String playerId = "Test-Player";
-
-		Optional<QuickGame> availableGame = Optional.of(new QuickGame("1111", "WaitingForPlayers", true, "1", null));
-		
-		when(gameService.findQuickGame(playerId)).thenReturn(availableGame);
-		
-		mockMvc.perform(MockMvcRequestBuilders.post("/games/quick")
-				.header("X-Player", playerId)
-				.contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().isOk());
-		
-		assertThat(availableGame).isNotEmpty().isNotNull();
-		
-		verify(gameService, times(1)).findQuickGame(eq(playerId));
-		
-	}
-	
-	@Test
-	void findQuickGameFailed_WithBadRequest() throws Exception {
-		String playerId = "Test-Player";
-
-		Optional<QuickGame> availableGame = Optional.empty();
-		
-		when(gameService.findQuickGame(playerId)).thenReturn(availableGame);
-		
-		mockMvc.perform(MockMvcRequestBuilders.post("/games/quick")
-				.header("X-Player", playerId)
-				.contentType(MediaType.APPLICATION_JSON))
-		.andExpect(status().isNotFound());
-		
-		assertThat(availableGame).isEmpty().isNotNull();
-		
-		verify(gameService, times(1)).findQuickGame(eq(playerId));
-		
 	}
 	
 	@Test
