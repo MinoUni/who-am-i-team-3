@@ -19,12 +19,15 @@ public class GameDetails {
 
 	private String status;
 
+	private String currentTurn;
+
 	private List<PlayerWithState> players;
 
 	public static GameDetails of(SynchronousGame game) {
 		return GameDetails.builder()
 				.id(game.getId())
 				.status(game.getState().getClass().getName())
+				.currentTurn(null)
 				.players(game.getPlayersList())
 				.build();
 	}
