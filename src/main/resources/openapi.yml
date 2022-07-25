@@ -523,7 +523,7 @@ components:
             $ref: '#/components/schemas/QuestionsHistory'
         currentQuestion:
           type: object
-            $ref: '#/components/schemas/QuestionsHistory'
+          $ref: '#/components/schemas/QuestionsHistory'
     QuestionsHistory:
       type: object
       properties:
@@ -566,3 +566,4 @@ components:
         - "ANSWERING"
         - "ANSWERED"
         - "FINISHED"
+        - "LOST"

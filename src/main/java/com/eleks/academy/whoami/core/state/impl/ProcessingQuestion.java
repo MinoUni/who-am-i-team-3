@@ -91,16 +91,15 @@ public final class ProcessingQuestion implements GameState {
     }
 
     private boolean isTimeToCalcAnswers() {
-        return this.players.size() == this.players
-                .values()
-                .stream()
-                .filter(player -> player.getState().equals(PlayerState.ANSWERED))
-                .count() + 1;
+        return this.playerAskOrder.size() ==
+                this.playerAskOrder
+                        .stream()
+                        .filter(player -> player.getState().equals(PlayerState.ANSWERED))
+                        .count() + 1;
     }
 
     private boolean isTimeToChangeTurn() {
-        long yes = this.players
-                .values()
+        long yes = this.playerAskOrder
                 .stream()
                 .filter(player -> !player.getPlayer().getId().equals(this.currentPlayer))
                 .filter(player -> player.getAnswer().equals(QuestionAnswer.YES) ||
@@ -108,8 +107,7 @@ public final class ProcessingQuestion implements GameState {
                 )
                 .count();
 
-        long no = this.players
-                .values()
+        long no = this.playerAskOrder
                 .stream()
                 .filter(player -> !player.getPlayer().getId().equals(this.currentPlayer))
                 .filter(player -> player.getAnswer().equals(QuestionAnswer.NO))
@@ -120,6 +118,12 @@ public final class ProcessingQuestion implements GameState {
     }
 
     private void startNewTurn() {
+        if (this.playerAskOrder.size() == 1) {
+            var loser = this.playerAskOrder.peek().getPlayer().getId();
+            this.players.get(loser).setState(PlayerState.LOST);
+            this.players.get(loser).setAnswer(null);
+            return;
+        }
         this.currentPlayer = Objects.requireNonNull(this.playerAskOrder.poll()).getPlayer().getId();
         this.playerAskOrder.add(this.players.get(this.currentPlayer));
         this.history.setCurrentQuestion(null);
@@ -128,15 +132,18 @@ public final class ProcessingQuestion implements GameState {
 
     private void reset() {
         this.history.setCurrentQuestion(null);
-        this.players.forEach((k, v) -> {
-            if (k.equals(currentPlayer)) {
-                v.setState(PlayerState.ASKING);
-                v.setAnswer(null);
-            } else {
-                v.setState(PlayerState.ANSWERING);
-                v.setAnswer(null);
-            }
-        });
+        this.players.values()
+                .stream()
+                .filter(player -> !player.getState().equals(PlayerState.FINISHED))
+                .forEach(player -> {
+                    if (player.getPlayer().getId().equals(currentPlayer)) {
+                        player.setState(PlayerState.ASKING);
+                        player.setAnswer(null);
+                    } else {
+                        player.setState(PlayerState.ANSWERING);
+                        player.setAnswer(null);
+                    }
+                });
     }
 
     public void submitGuess(String player, String guess) {
@@ -165,11 +172,11 @@ public final class ProcessingQuestion implements GameState {
         this.players.get(player).setAnswer(QuestionAnswer.valueOf(answer.toString()));
         this.players.get(player).setState(PlayerState.ANSWERED);
 
-        //TODO: Think about what to do with guesser after correct guess
         if (isTimeToCalcAnswers()) {
 
             if (isPlayerGuessed()) {
                 this.players.get(this.currentPlayer).setState(PlayerState.FINISHED);
+                this.playerAskOrder.remove(this.players.get(this.currentPlayer));
                 startNewTurn();
             } else startNewTurn();
 
@@ -177,15 +184,13 @@ public final class ProcessingQuestion implements GameState {
     }
 
     private boolean isPlayerGuessed() {
-        long yes = this.players
-                .values()
+        long yes = this.playerAskOrder
                 .stream()
                 .filter(player -> !player.getPlayer().getId().equals(this.currentPlayer))
                 .filter(player -> player.getAnswer().equals(QuestionAnswer.YES))
                 .count();
 
-        long no = this.players
-                .values()
+        long no = this.playerAskOrder
                 .stream()
                 .filter(player -> !player.getPlayer().getId().equals(this.currentPlayer))
                 .filter(player -> player.getAnswer().equals(QuestionAnswer.NO))
