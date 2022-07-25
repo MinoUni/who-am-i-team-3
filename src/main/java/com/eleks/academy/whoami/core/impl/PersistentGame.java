@@ -30,6 +30,10 @@ public class PersistentGame implements SynchronousGame {
 
     private final Queue<GameState> gameState = new LinkedBlockingQueue<>();
 
+    private final List<String> listOfDefaultNames = List.of("Player 1", "Player 2", "Player 3", "Player 4");
+
+    private final Queue<String> queue = new LinkedBlockingQueue<>(listOfDefaultNames);
+
     /*
      * Creates a new game (game room)
      *
@@ -70,7 +74,7 @@ public class PersistentGame implements SynchronousGame {
     public SynchronousPlayer enrollToGame(String player) {
         if (this.getState() instanceof WaitingForPlayers) {
 
-            var newPlayer = new PersistentPlayer(player);
+            var newPlayer = new PersistentPlayer(player, getDefaultName());
 
             assert gameState.peek() != null;
             ((WaitingForPlayers) gameState.peek()).add(newPlayer);
@@ -83,6 +87,12 @@ public class PersistentGame implements SynchronousGame {
         } else
             throw new GameNotFoundException("Game [" + this.getId() + "] already at "
                     + this.getState().getClass().getSimpleName() + " state.");
+    }
+
+    private String getDefaultName() {
+        String defaultName = this.queue.poll();
+        this.queue.add(defaultName);
+        return defaultName;
     }
 
     @Override

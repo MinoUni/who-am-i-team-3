@@ -12,8 +12,9 @@ public class PersistentPlayer implements SynchronousPlayer {
 
 	private final String id;
 
-	public PersistentPlayer(String id) {
+	public PersistentPlayer(String id, String name) {
 		this.id = Objects.requireNonNull(id);
+		this.name = Objects.requireNonNull(name);
 	}
 
 	@Override
