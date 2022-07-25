@@ -3,6 +3,7 @@ package com.eleks.academy.whoami.model.response;
 import com.eleks.academy.whoami.core.chat.QuestionsHistory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,9 @@ public class GameHistory {
 
     @Getter
     private final List<QuestionsHistory> questions = new ArrayList<>();
+
+    @Setter
+    @Getter
     private QuestionsHistory currentQuestion;
 
     public void addQuestion(String player, String type, String question) {

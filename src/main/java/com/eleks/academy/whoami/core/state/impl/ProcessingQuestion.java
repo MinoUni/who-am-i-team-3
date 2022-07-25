@@ -64,6 +64,13 @@ public final class ProcessingQuestion implements GameState {
     }
 
     public void answerQuestion(String player, QuestionAnswer answer) {
+        if (this.history.getCurrentQuestion() == null) {
+            throw new GameException("Player not provide a question yet.");
+        }
+        if (this.history.getCurrentQuestion().getType().equals(GUESS)) {
+            throw new GameException("Current question type = " +
+                    this.history.getCurrentQuestion().getType());
+        }
         if (!this.players.get(player).getState().equals(PlayerState.ANSWERING)) {
             throw new PlayerNotFoundException("PROCESSING-QUESTION: [" + player + "] state [" +
                     this.players.get(player).getState().toString() + "] != ANSWERING.");
@@ -85,10 +92,10 @@ public final class ProcessingQuestion implements GameState {
 
     private boolean isTimeToCalcAnswers() {
         return this.players.size() == this.players
-                                        .values()
-                                        .stream()
-                                        .filter(player -> player.getState().equals(PlayerState.ANSWERED))
-                                        .count() + 1;
+                .values()
+                .stream()
+                .filter(player -> player.getState().equals(PlayerState.ANSWERED))
+                .count() + 1;
     }
 
     private boolean isTimeToChangeTurn() {
@@ -115,10 +122,12 @@ public final class ProcessingQuestion implements GameState {
     private void startNewTurn() {
         this.currentPlayer = Objects.requireNonNull(this.playerAskOrder.poll()).getPlayer().getId();
         this.playerAskOrder.add(this.players.get(this.currentPlayer));
+        this.history.setCurrentQuestion(null);
         reset();
     }
 
     private void reset() {
+        this.history.setCurrentQuestion(null);
         this.players.forEach((k, v) -> {
             if (k.equals(currentPlayer)) {
                 v.setState(PlayerState.ASKING);
@@ -140,6 +149,13 @@ public final class ProcessingQuestion implements GameState {
     }
 
     public void answerGuess(String player, GuessAnswer answer) {
+        if (this.history.getCurrentQuestion() == null) {
+            throw new GameException("Player not provide a question yet.");
+        }
+        if (this.history.getCurrentQuestion().getType().equals(QUESTION)) {
+            throw new GameException("Current question type = " +
+                    this.history.getCurrentQuestion().getType());
+        }
         if (!this.players.get(player).getState().equals(PlayerState.ANSWERING)) {
             throw new PlayerNotFoundException("PROCESSING-QUESTION: [" + player + "] state [" +
                     this.players.get(player).getState().toString() + "] != ANSWERING.");
