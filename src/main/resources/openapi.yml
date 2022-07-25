@@ -176,7 +176,7 @@ paths:
               $ref: '#/components/schemas/CharacterSuggestion'
       responses:
         '200':
-          description: No response data in case succesful request
+          description: No response data in case successful request
         '404':
           description: Provided player id or game id not exist or incorrect
           content:
@@ -244,7 +244,7 @@ paths:
               $ref: '#/components/schemas/Message'
       responses:
         '200':
-          description: No response data in case succesful request
+          description: No response data in case successful request
         '404':
           description: Provided player id or game id are incorrect or player already submit question
           content:
@@ -279,7 +279,7 @@ paths:
               $ref: '#/components/schemas/Message'
       responses:
         '200':
-          description: No response data in case succesful request
+          description: No response data in case successful request
         '404':
           description: Provided player id or game id are incorrect or player already submit guess
           content:
@@ -314,7 +314,7 @@ paths:
               $ref: '#/components/schemas/QuestionAnswer'
       responses:
         '200':
-          description: No response data in case succesful request
+          description: No response data in case successful request
         '404':
           description: Provided player id or game id are incorrect or player already submit answer
           content:
@@ -349,7 +349,7 @@ paths:
               $ref: '#/components/schemas/GuessAnswer'
       responses:
         '200':
-          description: No response data in case succesful request
+          description: No response data in case successful request
         '404':
           description: Provided player id or game id are incorrect or player already submit answer
           content:
@@ -520,6 +520,9 @@ components:
         questions:
           type: array
           items:
+            $ref: '#/components/schemas/QuestionsHistory'
+        currentQuestion:
+          type: object
             $ref: '#/components/schemas/QuestionsHistory'
     QuestionsHistory:
       type: object
