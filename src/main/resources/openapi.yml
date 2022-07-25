@@ -4,6 +4,7 @@ info:
   title: Who am I?
   description: Rest Api description
 servers:
+  - url: http://localhost:8090/api/v1
   - url: https://who-am-i-t3f.herokuapp.com/api/v1
 paths:
   /games:
@@ -546,7 +547,7 @@ components:
       enum:
         - "YES"
         - "NO"
-        - NOT_SURE
+        - "NOT_SURE"
     GuessAnswer:
       type: string
       enum:
@@ -555,10 +556,10 @@ components:
     PlayerState:
       type: string
       enum:
-        - NOT_READY
-        - READY
-        - ASKING
-        - ASKED
-        - ANSWERING
-        - ANSWERED
-        - FINISHED              
+        - "NOT_READY"
+        - "READY"
+        - "ASKING"
+        - "ASKED"
+        - "ANSWERING"
+        - "ANSWERED"
+        - "FINISHED"

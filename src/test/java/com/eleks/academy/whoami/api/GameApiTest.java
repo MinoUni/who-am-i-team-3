@@ -76,7 +76,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
                 GameApi gameApi = new GameApi(new ApiClient());
 
-                NewGameSize newGameSize = new NewGameSize();
+                com.eleks.academy.whoami.model.NewGameSize newGameSize = new com.eleks.academy.whoami.model.NewGameSize();
                 newGameSize.setMaxPlayers(4);
 
                 SynchronousPlayer synchronousPlayer = new SynchronousPlayer();
@@ -91,10 +91,9 @@ import static org.assertj.core.api.Assertions.assertThat;
                 GameDetails gameDetails = new GameDetails();
                 gameDetails.id("1234-Uid");
                 gameDetails.status("WaitingForPlayers");
-                gameDetails.currentTurn("1");
                 gameDetails.players(singletonList(playerWithState));
 
-                assertThat(gameApi.createGame("Example")).isEqualTo(gameDetails);
+                assertThat(gameApi.createGame(newGameSize, "Example")).isEqualTo(gameDetails);
             }
         }
 
@@ -103,8 +102,8 @@ import static org.assertj.core.api.Assertions.assertThat;
             try (InputStream in = getClass().getResourceAsStream("/models/game/get-game-by-id-response.json")) {
                 String expectedResponse = new String(in.readAllBytes());
                 wireMockServer
-                        .stubFor(WireMock.get(WireMock.urlMatching("/api/v1/games/1234-Uid")).withHeader("X-Player",
-                                        equalTo("Example"))
+                        .stubFor(WireMock.get(WireMock.urlMatching("/api/v1/games/1234-Uid"))
+                                .withHeader("X-Player", equalTo("Example"))
                                 .willReturn(WireMock.aResponse().withBody(expectedResponse).withStatus(HttpStatus.OK.value())
                                         .withHeader("Content-Type", "application/json")));
 
@@ -122,7 +121,6 @@ import static org.assertj.core.api.Assertions.assertThat;
                 GameDetails gameDetails = new GameDetails();
                 gameDetails.id("1234-Uid");
                 gameDetails.status("WaitingForPlayers");
-                gameDetails.currentTurn("1");
                 gameDetails.players(singletonList(playerWithState));
 
                 assertThat(gameApi.findById("1234-Uid", "Example"))
@@ -156,7 +154,6 @@ import static org.assertj.core.api.Assertions.assertThat;
                 GameDetails gameDetails = new GameDetails();
                 gameDetails.id("1234-Uid");
                 gameDetails.status("WaitingForPlayers");
-                gameDetails.currentTurn("1");
                 gameDetails.players(singletonList(playerWithState));
 
                 assertThat(gameApi.startGame("1234-Uid", "Example")).isEqualTo(gameDetails);
@@ -291,7 +288,7 @@ import static org.assertj.core.api.Assertions.assertThat;
                 Message message = new Message();
                 message.message("Question");
 
-                gameApi.answerQuestion(message, "1234-Uid", "Example");
+                gameApi.answerQuestion("1234-Uid", "Example");
             }
         }
 
