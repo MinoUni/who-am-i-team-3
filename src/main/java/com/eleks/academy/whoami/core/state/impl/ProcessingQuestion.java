@@ -221,7 +221,11 @@ public final class ProcessingQuestion implements GameState {
     @Override
     public Optional<SynchronousPlayer> leave(String player) {
         if (findPlayer(player).isPresent()) {
-            return Optional.of(this.players.remove(player).getPlayer());
+            var leavePlayer = this.players.remove(player).getPlayer();
+            if (player.equals(this.currentPlayer)) {
+                startNewTurn();
+            } else reset();
+            return Optional.of(leavePlayer);
         } else throw new PlayerNotFoundException("[" + player + "] not found.");
     }
 }
