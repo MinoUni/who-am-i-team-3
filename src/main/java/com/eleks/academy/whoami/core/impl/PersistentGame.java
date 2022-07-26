@@ -74,8 +74,7 @@ public class PersistentGame implements SynchronousGame {
     public SynchronousPlayer enrollToGame(String player) {
         if (this.getState() instanceof WaitingForPlayers) {
 
-//            var newPlayer = new PersistentPlayer(player, getDefaultName());
-            var newPlayer = new PersistentPlayer(player);
+            var newPlayer = new PersistentPlayer(player, getDefaultName());
 
             assert gameState.peek() != null;
             ((WaitingForPlayers) gameState.peek()).add(newPlayer);
