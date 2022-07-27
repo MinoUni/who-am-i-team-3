@@ -32,7 +32,7 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public Integer getAllPlayersCount() {
-		return Math.toIntExact(this.gameRepository.getAllPlayers().count());
+		return this.gameRepository.getAllPlayers();
 	}
 
 	@Override
@@ -44,14 +44,14 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public Optional<GameDetails> findByIdAndPlayer(String id, String player) {
-		return this.gameRepository.findById(id)
+		return this.gameRepository.findGameById(id)
 				.filter(game -> game.findPlayer(player).isPresent())
 				.map(GameDetails::of);
 	}
 
 	@Override
 	public Optional<TurnDetails> findTurnInfo(String id, String player) {
-		var game = this.gameRepository.findById(id);
+		var game = this.gameRepository.findGameById(id);
 		if (game.isPresent() && game.get().getState() instanceof ProcessingQuestion) {
 			return Optional.ofNullable(game.get().findTurnInfo(player));
 		} else throw new GameNotFoundException("PROCESSING-QUESTION: Game with id[" + id + "] not found.");
@@ -59,7 +59,7 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public Optional<GameHistory> findGameHistory(String id) {
-		var game = this.gameRepository.findById(id);
+		var game = this.gameRepository.findGameById(id);
 		if (game.isPresent()) {
 			return Optional.ofNullable(game.get().getGameHistory());
 		} else throw new GameNotFoundException("findGameHistory: Game with id[" + id + "] not found.");
@@ -80,35 +80,37 @@ public class GameServiceImpl implements GameService {
 			final SynchronousGame game = gameRepository.save(new PersistentGame(gameRequest.getMaxPlayers()));
 			enrollToGame(game.getId(), player);
 
-			return gameRepository.findById(game.getId()).map(GameDetails::of);
+			return gameRepository.findGameById(game.getId()).map(GameDetails::of);
 		}
 
 		var FirstGame = games.keySet().stream().findFirst().get();
 		enrollToGame(games.get(FirstGame).getId(), player);
 
-		return gameRepository.findById(games.get(FirstGame).getId()).map(GameDetails::of);
+		return gameRepository.findGameById(games.get(FirstGame).getId()).map(GameDetails::of);
 	}
 
 	@Override
 	public SynchronousPlayer enrollToGame(String id, String player) {
-		if (this.gameRepository.findPlayerByHeader(player).isPresent()) {
+		if (this.gameRepository.findPlayerById(player).isPresent()) {
 			throw new PlayerAlreadyInGameException("ENROLL-TO-GAME: [" + player + "] already in other game.");
-		} else this.gameRepository.savePlayer(player);
-
-		return this.gameRepository.findById(id).get().enrollToGame(player);
+		}
+		return this.gameRepository.findGameById(id).get().enrollToGame(player);
 	}
 
 	@Override
 	public Optional<LeaveDetails> leaveGame(String id, String player) {
 
-		if (this.gameRepository.findPlayerByHeader(player).isPresent()) {
+		if (this.gameRepository.findPlayerById(player).isPresent()) {
 
-			var game = this.gameRepository.findById(id);
+			var game = this.gameRepository.findGameById(id);
 
 			if (game.isPresent()) {
 
-				this.gameRepository.deletePlayerByHeader(player);
-				var plToLeave = game.get().leaveGame(player).get();
+				var plToLeave = game.get()
+						.leaveGame(player)
+						.orElseThrow(
+								() -> new PlayerNotFoundException("[" + player + "] in game with id[" + id + "] not found.")
+						);
 
 				if (String.valueOf(game.get().getPlayersList().size()).equals("0")) {
 					this.gameRepository.disbandGame(id);
@@ -137,7 +139,7 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public void suggestCharacter(String id, String player, CharacterSuggestion suggestion) {
-		this.gameRepository.findById(id)
+		this.gameRepository.findGameById(id)
 				.filter(game -> game.getState() instanceof SuggestingCharacters)
 				.ifPresentOrElse(game -> game.suggestCharacter(player, suggestion),
 						() -> {
@@ -148,7 +150,7 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public void askQuestion(String id, String player, String message) {
-		this.gameRepository.findById(id)
+		this.gameRepository.findGameById(id)
 				.filter(game -> game.getState() instanceof ProcessingQuestion)
 				.ifPresentOrElse(game -> game.askQuestion(player, message),
 						() -> {
@@ -159,7 +161,7 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public void answerQuestion(String id, String player, QuestionAnswer answer) {
-		this.gameRepository.findById(id)
+		this.gameRepository.findGameById(id)
 				.filter(game -> game.getState() instanceof ProcessingQuestion)
 				.ifPresentOrElse(game -> game.answerQuestion(player, answer),
 						() -> {
@@ -170,7 +172,7 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public void submitGuess(String id, String player, String guess) {
-		this.gameRepository.findById(id)
+		this.gameRepository.findGameById(id)
 				.filter(game -> game.getState() instanceof ProcessingQuestion)
 				.ifPresentOrElse(game -> game.submitGuess(player, guess),
 						() -> {
@@ -181,7 +183,7 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public void answerGuess(String id, String player, GuessAnswer answer) {
-		this.gameRepository.findById(id)
+		this.gameRepository.findGameById(id)
 				.filter(game -> game.getState() instanceof ProcessingQuestion)
 				.ifPresentOrElse(game -> game.answerGuess(player, answer),
 						() -> {

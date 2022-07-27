@@ -43,7 +43,11 @@ public final class WaitingForPlayers implements GameState {
 
 	@Override
 	public Optional<SynchronousPlayer> findPlayer(String player) {
-		return Optional.ofNullable(this.players.get(player).getPlayer());
+		var result = Optional.ofNullable(this.players.get(player));
+		if (result.isEmpty()) {
+			return Optional.empty();
+		}
+		return Optional.ofNullable(result.get().getPlayer());
 	}
 
 	@Override

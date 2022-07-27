@@ -69,11 +69,11 @@ class GameServiceImplTest {
 		SynchronousGame game = new PersistentGame(4);
 		Optional<SynchronousGame> gameById = Optional.of(game);
 
-		when(mockGameRepository.findById(game.getId())).thenReturn(gameById);
+		when(mockGameRepository.findGameById(game.getId())).thenReturn(gameById);
 		
 		Assertions.assertDoesNotThrow(() -> gameService.leaveGame(game.getId(), "player"));
 		
-		verify(mockGameRepository, times(1)).findById(game.getId());
+		verify(mockGameRepository, times(1)).findGameById(game.getId());
 	}
 	
   @Test
@@ -81,11 +81,11 @@ class GameServiceImplTest {
 		final String id = "542332";
 		Optional<SynchronousGame> gameById = Optional.empty();
 		
-		when(mockGameRepository.findById(eq(id))).thenReturn(gameById);
+		when(mockGameRepository.findGameById(eq(id))).thenReturn(gameById);
 		
 		Assertions.assertThrows(ResponseStatusException.class, () -> gameService.leaveGame(id, "player"));
 		
-		verify(mockGameRepository, times(1)).findById(eq(id));
+		verify(mockGameRepository, times(1)).findGameById(eq(id));
 	}
   
 }

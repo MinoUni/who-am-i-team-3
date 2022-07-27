@@ -203,7 +203,7 @@ public final class ProcessingQuestion implements GameState {
     public Optional<SynchronousPlayer> findPlayer(String player) {
         var result = Optional.ofNullable(this.players.get(player));
         if (result.isEmpty()) {
-            throw new PlayerNotFoundException("PROCESSING-QUESTION: [" + player + "] not found.");
+            return Optional.empty();
         }
         return Optional.ofNullable(result.get().getPlayer());
     }
