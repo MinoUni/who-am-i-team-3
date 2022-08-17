@@ -42,8 +42,8 @@ public class GameController {
     public ResponseEntity<GameDetails> createGame(@RequestHeader(PLAYER) String player,
                                                   @Valid @RequestBody NewGameSize gameRequest) {
 
-        return this.gameService.createGame(player, gameRequest)
-                .map(ResponseEntity::ok)
+        var createdGame = this.gameService.createGame(player, gameRequest);
+        return createdGame.map(gameDetails -> new ResponseEntity<>(gameDetails, HttpStatus.CREATED))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
