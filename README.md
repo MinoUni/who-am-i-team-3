@@ -15,7 +15,9 @@ Currently working only ```Quick game```(MVP). Quick game - game session with 4 p
 
 1. Wait until 4 players connect to quick game. Simply can open demo in 4 tabs.
 2. All players need to provide a ```Character suggestion``` before time outs. In suggestion form you also can change default name. Players that provide suggestion marks with ```✓(READY)``` status. If times out game will be disbanded and all players return to main screen.
-3. If all players succeed with suggestion - game starts. Randomly 1 of the players become ```ASKER``` and he can provide a question.
+3. If all players succeed with suggestion - game starts. Randomly 1 of the players become ```ASKER```, his character label marks green and he can provide a question. When asker provided question other players can answer on it with ```YES|NO|NOT_SURE```. If ```YES + NOT_SURE > NO``` player can ask once more else other player become ```ASKER```.
+4. ```ASKER``` besides question can try to guess his character. Other players can answer only ```YES|NO```. If ```YES > NO``` player become ```Winner``` and leaves a game.
+5. The last player who didn't guessed his character become ```Loser```.
 ## 5. How to run locally if demo dies
 1. Clone back & front parts of the project.
    For front part follow guide that described in ```README```.
