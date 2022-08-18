@@ -1,12 +1,12 @@
 {
 	"id": "1234-Uid",
 	"status": "WaitingForPlayers",
-	"currentTurn": "1",
 	"players": [
 		{
 			"player": {
 				"name": "Example",
-				"character": "Batman"
+				"character": "Batman",
+				"id": "PlayerId"
 			},
 			"answer": "NO",
 			"state": "NOT_READY"

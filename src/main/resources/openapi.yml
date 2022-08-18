@@ -5,7 +5,6 @@ info:
   description: Rest Api description
 servers:
   - url: http://localhost:8090/api/v1
-  - url: https://who-am-i-t3f.herokuapp.com/api/v1
 paths:
   /games:
     get:
@@ -305,13 +304,12 @@ paths:
           required: true
           schema:
             type: string
-      requestParam:
-        description: Question answer model
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/QuestionAnswer'
+        - in: query
+          name: answer
+          description: Question answer model
+          required: true
+          schema:
+            $ref: '#/components/schemas/QuestionAnswer'
       responses:
         '200':
           description: No response data in case successful request
@@ -340,13 +338,12 @@ paths:
           required: true
           schema:
             type: string
-      requestParam:
-        description: Guess answer model
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/GuessAnswer'
+        - in: query
+          name: answer
+          description: Guess answer model
+          required: true
+          schema:
+            $ref: '#/components/schemas/GuessAnswer'
       responses:
         '200':
           description: No response data in case successful request
@@ -550,7 +547,7 @@ components:
       enum:
         - "YES"
         - "NO"
-        - "NOT_SURE"
+        - NOT_SURE
     GuessAnswer:
       type: string
       enum:
@@ -559,11 +556,11 @@ components:
     PlayerState:
       type: string
       enum:
-        - "NOT_READY"
-        - "READY"
-        - "ASKING"
-        - "ASKED"
-        - "ANSWERING"
-        - "ANSWERED"
-        - "FINISHED"
-        - "LOST"
+        - NOT_READY
+        - READY
+        - ASKING
+        - ASKED
+        - ANSWERING
+        - ANSWERED
+        - FINISHED
+        - LOST
