@@ -1,0 +1,26 @@
+{
+  "questions": [
+    {
+      "player": "Max",
+      "type": "question",
+      "question": "question text",
+      "answers": [
+        {
+          "player": "John",
+          "answer": "YES"
+        }
+      ]
+    }
+  ],
+  "currentQuestion": {
+    "player": "Max",
+    "type": "question",
+    "question": "question text",
+    "answers": [
+      {
+        "player": "John",
+        "answer": "YES"
+      }
+    ]
+  }
+}

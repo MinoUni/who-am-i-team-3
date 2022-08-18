@@ -42,8 +42,8 @@ public class GameController {
     public ResponseEntity<GameDetails> createGame(@RequestHeader(PLAYER) String player,
                                                   @Valid @RequestBody NewGameSize gameRequest) {
 
-        return this.gameService.createGame(player, gameRequest)
-                .map(ResponseEntity::ok)
+        var createdGame = this.gameService.createGame(player, gameRequest);
+        return createdGame.map(gameDetails -> new ResponseEntity<>(gameDetails, HttpStatus.CREATED))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -84,7 +84,7 @@ public class GameController {
     @PostMapping("/{id}/question")
     public void askQuestion(@PathVariable("id") String id,
                             @RequestHeader(PLAYER) String player,
-                            @RequestBody Message message) {
+                            @Valid @RequestBody Message message) {
 
         this.gameService.askQuestion(id, player, message.getMessage());
     }
@@ -92,7 +92,7 @@ public class GameController {
     @PostMapping("/{id}/question/answer")
     public void answerQuestion(@PathVariable("id") String id,
                                @RequestHeader(PLAYER) String player,
-                               @RequestParam QuestionAnswer answer) {
+                               @Valid @RequestParam QuestionAnswer answer) {
 
         this.gameService.answerQuestion(id, player, answer);
 
@@ -101,7 +101,7 @@ public class GameController {
     @PostMapping("/{id}/guess")
     public void submitGuess(@PathVariable("id") String id,
                             @RequestHeader(PLAYER) String player,
-                            @RequestBody Message message) {
+                            @Valid @RequestBody Message message) {
 
         this.gameService.submitGuess(id, player, message.getMessage());
     }
@@ -109,7 +109,7 @@ public class GameController {
     @PostMapping("/{id}/guess/answer")
     public void answerGuess(@PathVariable("id") String id,
                             @RequestHeader(PLAYER) String player,
-                            @RequestParam GuessAnswer answer) {
+                            @Valid @RequestParam GuessAnswer answer) {
 
         this.gameService.answerGuess(id, player, answer);
 
